@@ -1,0 +1,5 @@
+elm-stuff/
+.direnv
+.parcel-cache
+dist
+node_modules

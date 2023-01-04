@@ -1,0 +1,15 @@
+{
+  "name": "mastermind-elm",
+  "version": "1.0.0",
+  "source": "src/index.html",
+  "license": "MIT",
+  "scripts": {
+    "build": "parcel build",
+    "start": "parcel"
+  },
+  "devDependencies": {
+    "@parcel/transformer-elm": "2.8.0",
+    "elm": "^0.19.1-5",
+    "parcel": "^2.8.0"
+  }
+}

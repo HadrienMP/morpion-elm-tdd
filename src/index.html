@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="An implementation of the mastermind game and code kata in elm">
+    </head>
+    <body>
+        <div id="root"></div>
+        <script type="module">
+            import {Elm} from "./Main.elm";
+            Elm
+                .Main
+                .init({node: document.getElementById("root")});
+        </script>
+    </body>
+</html>
