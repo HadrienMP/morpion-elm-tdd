@@ -1,4 +1,4 @@
-module Player exposing (Player(..), other)
+module Player exposing (Player(..), other, print)
 
 
 type Player
@@ -14,3 +14,13 @@ other player =
 
         O ->
             X
+
+
+print : Player -> String
+print player =
+    case player of
+        X ->
+            "X"
+
+        O ->
+            "O"

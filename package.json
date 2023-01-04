@@ -6,6 +6,7 @@
   "scripts": {
     "build": "parcel build",
     "start": "parcel",
+    "start:dev": "parcel serve",
     "postinstall": "elm-tooling install"
   },
   "devDependencies": {

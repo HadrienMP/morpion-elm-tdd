@@ -64,7 +64,7 @@ config =
                 , ( "Element.Background", "Background" )
                 , ( "Element.Input", "Input" )
                 , ( "Html.Styled", "Html" )
-                , ( "Html.Styled.Attribute", "Attr" )
+                , ( "Html.Styled.Attributes", "Attr" )
                 , ( "Html.Styled.Events", "Evts" )
                 ]
                 |> NoInconsistentAliases.noMissingAliases

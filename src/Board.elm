@@ -1,4 +1,4 @@
-module Board exposing (Board, Move, Position, decide, empty, play)
+module Board exposing (Board, Move, Position, decide, get, init, play)
 
 import Css exposing (Position)
 import Decision exposing (Decision(..))
@@ -10,8 +10,8 @@ type Board
     = Board (List Move)
 
 
-empty : Board
-empty =
+init : Board
+init =
     Board
         []
 
@@ -31,6 +31,14 @@ type alias Move =
 play : Move -> Board -> Board
 play move (Board board) =
     Board <| move :: board
+
+
+get : Position -> Board -> Maybe Player
+get position (Board board) =
+    board
+        |> List.filter (.position >> (==) position)
+        |> List.head
+        |> Maybe.map .player
 
 
 nextPlayer : Board -> Player

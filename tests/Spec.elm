@@ -12,19 +12,19 @@ suite =
     describe "Tic Tac Toe"
         [ test "X plays first" <|
             \_ ->
-                Board.empty
+                Board.init
                     |> Board.decide
                     |> Expect.equal (Next X)
         , test "O plays second" <|
             \_ ->
-                Board.empty
+                Board.init
                     -- Lisibilité plutôt que robustesse
                     |> Board.play { player = X, position = { x = 0, y = 0 } }
                     |> Board.decide
                     |> Expect.equal (Next O)
         , test "Players take turns" <|
             \_ ->
-                Board.empty
+                Board.init
                     -- Lisibilité plutôt que robustesse
                     |> Board.play { player = X, position = { x = 0, y = 0 } }
                     |> Board.play { player = O, position = { x = 0, y = 2 } }
@@ -32,7 +32,7 @@ suite =
                     |> Expect.equal (Next X)
         , test "X wins" <|
             \_ ->
-                Board.empty
+                Board.init
                     -- Lisibilité plutôt que robustesse
                     |> Board.play { player = X, position = { x = 0, y = 0 } }
                     |> Board.play { player = O, position = { x = 0, y = 2 } }
