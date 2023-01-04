@@ -1,13 +1,13 @@
-module Board exposing (Board, Play, Position, empty, next, play)
+module Board exposing (Board, Move, Position, decide, empty, play)
 
 import Css exposing (Position)
+import Decision exposing (Decision(..))
 import List
 import Player exposing (Player(..))
-import Types
 
 
 type Board
-    = Board (List Play)
+    = Board (List Move)
 
 
 empty : Board
@@ -22,13 +22,13 @@ type alias Position =
     }
 
 
-type alias Play =
+type alias Move =
     { player : Player
     , position : Position
     }
 
 
-play : Play -> Board -> Board
+play : Move -> Board -> Board
 play move (Board board) =
     Board <| move :: board
 
@@ -43,14 +43,14 @@ nextPlayer (Board board) =
             X
 
 
-next : Board -> Types.Output
-next board =
+decide : Board -> Decision
+decide board =
     case findWinner board of
         Just winner ->
-            Types.Winner winner
+            WonBy winner
 
         Nothing ->
-            Types.Next <| nextPlayer board
+            Next <| nextPlayer board
 
 
 findWinner : Board -> Maybe Player

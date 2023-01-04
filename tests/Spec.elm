@@ -1,10 +1,10 @@
 module Spec exposing (suite)
 
 import Board
+import Decision exposing (..)
 import Expect
 import Player exposing (Player(..))
 import Test exposing (Test, describe, test)
-import Types exposing (..)
 
 
 suite : Test
@@ -13,14 +13,14 @@ suite =
         [ test "X plays first" <|
             \_ ->
                 Board.empty
-                    |> Board.next
+                    |> Board.decide
                     |> Expect.equal (Next X)
         , test "O plays second" <|
             \_ ->
                 Board.empty
                     -- Lisibilité plutôt que robustesse
                     |> Board.play { player = X, position = { x = 0, y = 0 } }
-                    |> Board.next
+                    |> Board.decide
                     |> Expect.equal (Next O)
         , test "Players take turns" <|
             \_ ->
@@ -28,7 +28,7 @@ suite =
                     -- Lisibilité plutôt que robustesse
                     |> Board.play { player = X, position = { x = 0, y = 0 } }
                     |> Board.play { player = O, position = { x = 0, y = 2 } }
-                    |> Board.next
+                    |> Board.decide
                     |> Expect.equal (Next X)
         , test "X wins" <|
             \_ ->
@@ -42,6 +42,6 @@ suite =
                     -- |   | O | O |
                     -- |   |   |   |
                     -- | X | X | X |
-                    |> Board.next
-                    |> Expect.equal (Winner X)
+                    |> Board.decide
+                    |> Expect.equal (WonBy X)
         ]
