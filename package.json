@@ -5,11 +5,14 @@
   "license": "MIT",
   "scripts": {
     "build": "parcel build",
-    "start": "parcel"
+    "start": "parcel",
+    "postinstall": "elm-tooling install"
   },
   "devDependencies": {
     "@parcel/transformer-elm": "2.8.0",
     "elm": "^0.19.1-5",
+    "elm-review": "^2.9.1",
+    "elm-tooling": "^1.10.0",
     "parcel": "^2.8.0"
   }
 }
