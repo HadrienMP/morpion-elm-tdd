@@ -3,3 +3,5 @@ elm-stuff/
 .parcel-cache
 dist
 node_modules
+.gitignore
+.idea
