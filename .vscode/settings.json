@@ -10,4 +10,8 @@
     "liveshare.codeLens": false,
     "liveshare.comments": false,
     "liveshare.languages.allowGuestCommandControl": true,
+    "elmLS.elmFormatPath": "npx elm-format",
+    "elmLS.elmPath": "npx elm",
+    "elmLS.elmReviewPath": "npx elm-review",
+    "elmLS.elmTestPath": "npx elm-test",
 }
