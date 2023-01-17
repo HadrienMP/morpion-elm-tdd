@@ -1,0 +1,31 @@
+html {
+    height: 100%;
+}
+
+body {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    height: 100%;
+    line-height: 1.2;
+}
+
+header {
+    padding: 1rem;
+    display: flex;
+    background: #eee;
+    gap: 1rem;
+    align-items: center;
+
+    h1 {
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+}
+
+a {
+    color: #63c4ff;
+    text-decoration: none;
+
+    &:visited {
+        color: #63c4ff;
+    }
+}
