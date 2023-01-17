@@ -21,6 +21,7 @@
             pkgs.elmPackages.elm-json
             pkgs.nodejs-18_x
             pkgs.yarn
+            pkgs.nodePackages.gitmoji-cli
           ];
           
           shellHook = ''
