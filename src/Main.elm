@@ -2,13 +2,12 @@ module Main exposing (..)
 
 import Browser
 import Css
-import Dict
 import Html as Unstyled
-import Html.Styled as Html exposing (Html)
+import Html.Styled as Html
 import Html.Styled.Attributes as Attr
 import Html.Styled.Events as Evts exposing (..)
-import Presentation.Library exposing (Slide)
-import Presentation.Slides exposing (slides)
+import Presentation.Library
+import Presentation.Slides
 import Types exposing (Images)
 
 
@@ -96,7 +95,7 @@ update msg model =
                             (\updated -> { model | mode = Presentation updated })
                             (Cmd.map <| PresentationMsg << SlideMsg)
 
-        ( GameMsg subMsg, Game subModel ) ->
+        ( GameMsg subMsg, Game _ ) ->
             case subMsg of
                 Present ->
                     ( { model
