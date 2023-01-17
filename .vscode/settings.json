@@ -6,8 +6,8 @@
     "liveshare.alwaysFollowHost": false,
     "liveshare.anonymousGuestApproval": "accept",
     "liveshare.languages.allowGuestCommandControl": true,
-    "elmLS.elmFormatPath": "node_modules/.bin/elm-format",
-    "elmLS.elmPath": "node_modules/.bin/elm",
-    "elmLS.elmReviewPath": "node_modules/.bin/elm-review",
-    "elmLS.elmTestPath": "node_modules/.bin/elm-test-rs",
+    "elmLS.elmFormatPath": "elm-format",
+    "elmLS.elmPath": "elm",
+    "elmLS.elmReviewPath": "elm-review",
+    "elmLS.elmTestPath": "elm-test",
 }

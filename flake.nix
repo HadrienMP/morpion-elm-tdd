@@ -18,6 +18,7 @@
             pkgs.elmPackages.elm-review
             pkgs.coreutils # provide `yes` to accept everything asked by `elm-review`
             pkgs.elmPackages.elm-test-rs
+            pkgs.elmPackages.elm-test # For the vscode test explorer to work properly
             pkgs.elmPackages.elm-json
             pkgs.nodejs-18_x
             pkgs.yarn
