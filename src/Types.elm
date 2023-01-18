@@ -6,4 +6,6 @@ type alias Images =
     , thomas : String
     , shodo : String
     , adventureTime : String
+    , tictactoe : String
+    , tdd : String
     }

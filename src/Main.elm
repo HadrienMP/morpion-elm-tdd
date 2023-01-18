@@ -25,7 +25,7 @@ main =
     Browser.element
         { init = init
         , update = update
-        , subscriptions = always Sub.none
+        , subscriptions = subscriptions
         , view = view
         }
 
@@ -36,11 +36,6 @@ main =
 
 type alias PlayModel =
     ()
-
-
-type alias PresentationModel =
-    { slide : Int
-    }
 
 
 type ModeModel
@@ -56,7 +51,10 @@ type alias Model =
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { mode = Presentation <| Presentation.Library.init flags.images Presentation.Slides.slides
+    ( { mode =
+            Presentation.Slides.slides
+                |> Presentation.Library.init
+                |> Presentation
       , images = flags.images
       }
     , Cmd.none
@@ -68,48 +66,49 @@ init flags =
 
 
 type Msg
-    = PresentationMsg PresentationMsg
-    | GameMsg GameMsg
-
-
-type GameMsg
-    = Present
-
-
-type PresentationMsg
-    = SlideMsg Presentation.Library.Msg
-    | StartGame
+    = PresentationMsg Presentation.Library.Msg
+    | SwitchMode
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model.mode ) of
+        ( SwitchMode, Presentation _ ) ->
+            ( { model | mode = Game () }, Cmd.none )
+
+        ( SwitchMode, Game _ ) ->
+            ( { model
+                | mode =
+                    Presentation.Slides.slides
+                        |> Presentation.Library.init
+                        |> Presentation
+              }
+            , Cmd.none
+            )
+
         ( PresentationMsg subMsg, Presentation subModel ) ->
-            case subMsg of
-                StartGame ->
-                    ( { model | mode = Game () }, Cmd.none )
-
-                SlideMsg slideMsg ->
-                    Presentation.Library.update slideMsg subModel
-                        |> Tuple.mapBoth
-                            (\updated -> { model | mode = Presentation updated })
-                            (Cmd.map <| PresentationMsg << SlideMsg)
-
-        ( GameMsg subMsg, Game _ ) ->
-            case subMsg of
-                Present ->
-                    ( { model
-                        | mode =
-                            Presentation <|
-                                Presentation.Library.init
-                                    model.images
-                                    Presentation.Slides.slides
-                      }
-                    , Cmd.none
-                    )
+            Presentation.Library.update subMsg subModel
+                |> Tuple.mapBoth
+                    (\updated -> { model | mode = Presentation updated })
+                    (Cmd.map <| PresentationMsg)
 
         _ ->
             ( model, Cmd.none )
+
+
+
+-- Subscriptions
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    case model.mode of
+        Presentation presentation ->
+            Presentation.Library.subscriptions presentation
+                |> Sub.map PresentationMsg
+
+        _ ->
+            Sub.none
 
 
 
@@ -132,10 +131,10 @@ view model =
                 [ Html.h1 [] [ Html.text "Morpion" ]
                 , case model.mode of
                     Presentation _ ->
-                        Html.button [ Evts.onClick <| PresentationMsg StartGame ] [ Html.text "Jouer" ]
+                        Html.button [ Evts.onClick SwitchMode ] [ Html.text "Jouer" ]
 
                     Game _ ->
-                        Html.button [ Evts.onClick <| GameMsg Present ] [ Html.text "Présenter" ]
+                        Html.button [ Evts.onClick SwitchMode ] [ Html.text "Présenter" ]
                 ]
             , Html.main_
                 [ Attr.css
@@ -145,8 +144,10 @@ view model =
                 ]
                 [ case model.mode of
                     Presentation presentation ->
-                        Presentation.Library.view presentation
-                            |> Html.map (PresentationMsg << SlideMsg)
+                        Presentation.Library.view
+                            model.images
+                            presentation
+                            |> Html.map PresentationMsg
 
                     Game _ ->
                         Html.h2 [] [ Html.text "Tic Tac Toe" ]

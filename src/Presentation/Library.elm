@@ -1,31 +1,45 @@
 module Presentation.Library exposing (..)
 
+import Browser.Events
 import Css
 import Dict
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attr
 import Html.Styled.Events as Evts exposing (..)
+import Json.Decode as Decode
 
 
-type Msg
-    = Next
-    | Previous
+
+--
+-- Init
+--
 
 
 type alias Model context =
     { currentSlide : Int
     , slides : List (Slide context Msg)
-    , context : context
     }
 
 
-init : context -> List (Slide context Msg) -> Model context
-init context slides =
-    { currentSlide = 0, slides = slides, context = context }
+init : List (Slide context Msg) -> Model context
+init slides =
+    { currentSlide = 0, slides = slides }
 
 
 type alias Slide context msg =
     { content : context -> Html msg, background : Maybe (context -> String) }
+
+
+
+--
+-- Update
+--
+
+
+type Msg
+    = Next
+    | Previous
+    | KeyPressed String
 
 
 update : Msg -> Model context -> ( Model context, Cmd Msg )
@@ -37,9 +51,47 @@ update msg model =
         Previous ->
             ( { model | currentSlide = model.currentSlide - 1 |> max 0 }, Cmd.none )
 
+        KeyPressed key ->
+            case key of
+                "PageUp" ->
+                    ( { model | currentSlide = model.currentSlide - 1 |> max 0 }, Cmd.none )
 
-view : Model context -> Html Msg
-view model =
+                "ArrowLeft" ->
+                    ( { model | currentSlide = model.currentSlide - 1 |> max 0 }, Cmd.none )
+
+                "PageDown" ->
+                    ( { model | currentSlide = model.currentSlide + 1 |> min (List.length model.slides - 1) }, Cmd.none )
+
+                "ArrowRight" ->
+                    ( { model | currentSlide = model.currentSlide + 1 |> min (List.length model.slides - 1) }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
+
+
+
+--
+-- Subscriptions
+--
+
+
+subscriptions : Model context -> Sub Msg
+subscriptions _ =
+    Browser.Events.onKeyDown
+        (Decode.field "key" Decode.string
+            |> Decode.map (Debug.log "haha")
+            |> Decode.map KeyPressed
+        )
+
+
+
+--
+-- View
+--
+
+
+view : context -> Model context -> Html Msg
+view context model =
     Html.div
         [ Attr.css
             [ Css.position Css.relative
@@ -50,7 +102,7 @@ view model =
             |> List.indexedMap Tuple.pair
             |> Dict.fromList
             |> Dict.get model.currentSlide
-            |> Maybe.map (slide model.context)
+            |> Maybe.map (slide context)
             |> Maybe.withDefault (Html.h1 [] [ Html.text <| "What slide now ? " ++ String.fromInt model.currentSlide ])
         , Html.div
             [ Attr.css
