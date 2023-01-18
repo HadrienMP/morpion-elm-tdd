@@ -2,7 +2,7 @@ module Lib.Slides exposing (Background, Model, Msg(..), Slide, init, subscriptio
 
 import Browser.Events
 import Dict
-import Element exposing (Element, alignBottom, spacing, width)
+import Element exposing (Element)
 import Element.Background as Background
 import Element.Font as Font
 import Element.Input
@@ -111,6 +111,7 @@ view context model =
             ]
         }
         [ Font.color <| Element.rgb 1 1 1
+        , Element.clip
         , Element.inFront <|
             Element.column
                 [ Element.alignBottom
@@ -136,20 +137,43 @@ view context model =
                 , progressBar model
                 ]
         ]
-        (model.slides
-            |> List.indexedMap Tuple.pair
-            |> Dict.fromList
-            |> Dict.get model.currentSlide
-            |> Maybe.map (slide context)
-            |> Maybe.withDefault (slideNotFound model)
-        )
+    <|
+        Element.row
+            [ Element.height Element.fill
+            , Element.htmlAttribute <|
+                Html.Attributes.style "width" <|
+                    String.fromInt (List.length model.slides * 100)
+                        ++ "vw"
+            , Element.htmlAttribute <|
+                Html.Attributes.style "margin-left" <|
+                    String.fromInt (-100 * model.currentSlide)
+                        ++ "vw"
+            , Element.htmlAttribute <| Html.Attributes.style "transition" "margin-left 0.5s cubic-bezier(0.86, 0, 0.07, 1) 0s"
+            ]
+            (model.slides
+                |> List.indexedMap Tuple.pair
+                |> List.map
+                    (slide
+                        { context = context
+                        , totalSlides = List.length model.slides
+                        }
+                    )
+            )
 
 
 progressBar : Model context -> Element Msg
 progressBar model =
     Element.el
         [ Element.height <| Element.px 8
-        , Element.htmlAttribute <| Html.Attributes.style "width" <| String.fromInt (progress model) ++ "%"
+        , Element.htmlAttribute <|
+            Html.Attributes.style "width" <|
+                String.fromInt
+                    (progress
+                        { currentSlide = model.currentSlide
+                        , totalSlides = List.length model.slides
+                        }
+                    )
+                    ++ "%"
         , Element.htmlAttribute <| Html.Attributes.style "transition" "width 1s"
         , Background.color <| actionColor
         ]
@@ -161,49 +185,28 @@ actionColor =
     Element.rgb255 0 112 255
 
 
-progress : Model context -> Int
-progress model =
-    toFloat (List.length model.slides - 1)
-        |> (/) (toFloat model.currentSlide)
+progress : { currentSlide : Int, totalSlides : Int } -> Int
+progress { currentSlide, totalSlides } =
+    toFloat (totalSlides - 1)
+        |> (/) (toFloat currentSlide)
         |> (*) 100
         |> round
 
 
-slideNotFound : Model context -> Element Msg
-slideNotFound model =
-    Element.column
-        [ Element.centerX
-        , Element.centerY
-        , Element.spacing 20
-        , Element.width <| Element.maximum 300 <| Element.fill
-        ]
-        [ Element.el [ Font.size 60, Font.bold ] <|
-            Element.text "Oops"
-        , Element.el [ Font.size 30 ] <|
-            Element.text <|
-                "I can't find the slide "
-                    ++ pagination model
-        , Element.paragraph [ Font.justify, Element.paddingEach { top = 40, right = 0, bottom = 0, left = 0 } ]
-            [ Element.text <|
-                "The library is probably broken, please create an issue with a link to your deck."
-            ]
-        ]
-
-
-pagination : Model context -> String
-pagination model =
-    String.fromInt (model.currentSlide + 1)
-        ++ "/"
-        ++ String.fromInt (List.length model.slides)
-
-
-slide : context -> Slide context msg -> Element msg
-slide context { content, background } =
+slide :
+    { context : context, totalSlides : Int }
+    -> ( Int, Slide context msg )
+    -> Element msg
+slide { context, totalSlides } ( index, { content, background } ) =
     Element.el
         [ Background.color <| Element.rgb 0 0 0
-        , Element.width Element.fill
-        , Element.height Element.fill
         , Element.inFront <| Element.row [] []
+        , Element.height Element.fill
+        , Element.htmlAttribute <|
+            Html.Attributes.style "flex" <|
+                "0 0 "
+                    ++ String.fromInt (100 // totalSlides)
+                    ++ "%"
         ]
     <|
         Element.el
