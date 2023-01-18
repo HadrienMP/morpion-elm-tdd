@@ -8,4 +8,5 @@ type alias Images =
     , adventureTime : String
     , tictactoe : String
     , tdd : String
+    , disclaimer : String
     }
