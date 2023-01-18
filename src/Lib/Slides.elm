@@ -87,7 +87,6 @@ subscriptions : Model context -> Sub Msg
 subscriptions _ =
     Browser.Events.onKeyDown
         (Decode.field "key" Decode.string
-            |> Decode.map (Debug.log "haha")
             |> Decode.map KeyPressed
         )
 
