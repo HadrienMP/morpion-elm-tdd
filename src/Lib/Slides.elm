@@ -2,10 +2,12 @@ module Lib.Slides exposing (Background, Model, Msg(..), Slide, init, subscriptio
 
 import Browser.Events
 import Dict
-import Element exposing (Element)
+import Element exposing (Element, alignBottom, spacing, width)
 import Element.Background as Background
 import Element.Font as Font
+import Element.Input
 import Html exposing (Html)
+import Html.Attributes
 import Json.Decode as Decode
 
 
@@ -99,16 +101,100 @@ subscriptions _ =
 
 view : context -> Model context -> Html Msg
 view context model =
-    Element.layout
+    Element.layoutWith
+        { options =
+            [ Element.focusStyle
+                { borderColor = Nothing
+                , backgroundColor = Nothing
+                , shadow = Nothing
+                }
+            ]
+        }
         [ Font.color <| Element.rgb 1 1 1
+        , Element.inFront <|
+            Element.column
+                [ Element.alignBottom
+                , Element.width Element.fill
+                ]
+                [ Element.row
+                    [ Font.size 40
+                    , Font.light
+                    , Font.color actionColor
+                    , Element.alignRight
+                    , Element.spacing 10
+                    , Element.padding 20
+                    ]
+                    [ Element.Input.button []
+                        { onPress = Just Previous
+                        , label = Element.text "<"
+                        }
+                    , Element.Input.button []
+                        { onPress = Just Next
+                        , label = Element.text ">"
+                        }
+                    ]
+                , progressBar model
+                ]
         ]
         (model.slides
             |> List.indexedMap Tuple.pair
             |> Dict.fromList
             |> Dict.get model.currentSlide
             |> Maybe.map (slide context)
-            |> Maybe.withDefault (Element.text <| "What slide now ? " ++ String.fromInt model.currentSlide)
+            |> Maybe.withDefault (slideNotFound model)
         )
+
+
+progressBar : Model context -> Element Msg
+progressBar model =
+    Element.el
+        [ Element.height <| Element.px 8
+        , Element.htmlAttribute <| Html.Attributes.style "width" <| String.fromInt (progress model) ++ "%"
+        , Element.htmlAttribute <| Html.Attributes.style "transition" "width 1s"
+        , Background.color <| actionColor
+        ]
+        Element.none
+
+
+actionColor : Element.Color
+actionColor =
+    Element.rgb255 0 112 255
+
+
+progress : Model context -> Int
+progress model =
+    toFloat (List.length model.slides - 1)
+        |> (/) (toFloat model.currentSlide)
+        |> (*) 100
+        |> round
+
+
+slideNotFound : Model context -> Element Msg
+slideNotFound model =
+    Element.column
+        [ Element.centerX
+        , Element.centerY
+        , Element.spacing 20
+        , Element.width <| Element.maximum 300 <| Element.fill
+        ]
+        [ Element.el [ Font.size 60, Font.bold ] <|
+            Element.text "Oops"
+        , Element.el [ Font.size 30 ] <|
+            Element.text <|
+                "I can't find the slide "
+                    ++ pagination model
+        , Element.paragraph [ Font.justify, Element.paddingEach { top = 40, right = 0, bottom = 0, left = 0 } ]
+            [ Element.text <|
+                "The library is probably broken, please create an issue with a link to your deck."
+            ]
+        ]
+
+
+pagination : Model context -> String
+pagination model =
+    String.fromInt (model.currentSlide + 1)
+        ++ "/"
+        ++ String.fromInt (List.length model.slides)
 
 
 slide : context -> Slide context msg -> Element msg
