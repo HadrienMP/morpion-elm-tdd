@@ -49,6 +49,26 @@ xLarge2 =
     text 4
 
 
+giga : String -> Element.Element msg
+giga =
+    giga2 []
+
+
+giga2 : List (Element.Attribute msg) -> String -> Element.Element msg
+giga2 =
+    text 5
+
+
+xGiga : String -> Element.Element msg
+xGiga =
+    xGiga2 []
+
+
+xGiga2 : List (Element.Attribute msg) -> String -> Element.Element msg
+xGiga2 =
+    text 6
+
+
 text : Int -> List (Element.Attribute msg) -> String -> Element.Element msg
 text scale attributes =
     Element.el ((Element.Font.size <| scaled scale) :: attributes) << Element.text

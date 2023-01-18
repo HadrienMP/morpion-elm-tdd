@@ -19,21 +19,23 @@ view =
                 , Element.spacing UI.Space.xLarge
                 ]
                 [ Element.column [ Element.centerX ]
-                    [ UI.Text.xLarge2
+                    [ UI.Text.xGiga2
                         [ Element.Font.bold
                         , Element.centerX
                         ]
-                        "Jeu du Morpion"
-                    , UI.Text.large2 [ Element.centerX ] "Elm + TDD"
+                        "Morpion"
+                    , UI.Text.giga2 [ Element.centerX ] "Elm + TDD"
                     ]
                 , Element.row
-                    [ Element.spacing UI.Space.small
+                    [ Element.spaceEvenly
+                    , Element.centerX
+                    , Element.width Element.fill
                     ]
                     [ Element.image imageStyle
                         { src = images.tictactoe
                         , description = "Une grille de morpion"
                         }
-                    , Element.el imageStyle <| ElmLogo.element 140
+                    , Element.el imageStyle <| ElmLogo.element imageSize
                     , Element.image imageStyle
                         { src = images.tdd
                         , description = "Le cycle red green refactor"
@@ -44,10 +46,15 @@ view =
     }
 
 
+imageSize : Int
+imageSize =
+    130
+
+
 imageStyle : List (Element.Attribute msg)
 imageStyle =
-    [ Element.width <| Element.px 140
-    , Element.height <| Element.px 140
+    [ Element.width <| Element.px imageSize
+    , Element.height <| Element.px imageSize
     , Element.clip
     , Element.Border.rounded 10
     ]

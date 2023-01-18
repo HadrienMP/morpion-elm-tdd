@@ -1,6 +1,7 @@
 module Presentation.Slide3 exposing (..)
 
 import Element
+import Element.Font
 import ElmLogo
 import Presentation.Types
 import UI
@@ -16,7 +17,7 @@ view =
                 [ Element.row [ Element.spacing UI.Space.xLarge ]
                     [ Element.el [ Element.alignTop ] <| ElmLogo.element 140
                     , Element.column [ Element.spacing UI.Space.medium ]
-                        [ UI.Text.xLarge "Elm"
+                        [ UI.Text.xLarge2 [ Element.Font.bold ] "Elm"
                         , UI.ul []
                             [ "Evan Czapliki : 2012"
                             , "Frontend"
@@ -37,7 +38,7 @@ view =
                             , description = "Le cycle TDD: Red Green Refactor"
                             }
                     , Element.column [ Element.spacing UI.Space.medium ]
-                        [ UI.Text.xLarge "TDD"
+                        [ UI.Text.xLarge2 [ Element.Font.bold ] "TDD"
                         , UI.ul []
                             [ "Kent Beck : 1999"
                             , "Technique de design"
