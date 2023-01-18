@@ -1,7 +1,7 @@
-module Presentation.UI.Text exposing (..)
+module Presentation.UI.Text exposing (l2, m2, s, s2, xl2, xs, xs2, xxl2)
 
 import Element
-import Element.Font
+import Element.Font as Font
 
 
 scaled : Int -> Int
@@ -29,19 +29,9 @@ s2 =
     text 2
 
 
-m : String -> Element.Element msg
-m =
-    m2 []
-
-
 m2 : List (Element.Attribute msg) -> String -> Element.Element msg
 m2 =
     text 3
-
-
-l : String -> Element.Element msg
-l =
-    l2 []
 
 
 l2 : List (Element.Attribute msg) -> String -> Element.Element msg
@@ -49,19 +39,9 @@ l2 =
     text 4
 
 
-xl : String -> Element.Element msg
-xl =
-    xl2 []
-
-
 xl2 : List (Element.Attribute msg) -> String -> Element.Element msg
 xl2 =
     text 5
-
-
-xxl : String -> Element.Element msg
-xxl =
-    xxl2 []
 
 
 xxl2 : List (Element.Attribute msg) -> String -> Element.Element msg
@@ -71,4 +51,4 @@ xxl2 =
 
 text : Int -> List (Element.Attribute msg) -> String -> Element.Element msg
 text scale attributes =
-    Element.el ((Element.Font.size <| scaled scale) :: attributes) << Element.text
+    Element.el ((Font.size <| scaled scale) :: attributes) << Element.text

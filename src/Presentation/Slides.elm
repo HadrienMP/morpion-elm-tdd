@@ -1,4 +1,4 @@
-module Presentation.Slides exposing (..)
+module Presentation.Slides exposing (slides)
 
 import Presentation.Slide1
 import Presentation.Slide2

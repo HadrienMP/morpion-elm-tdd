@@ -1,11 +1,11 @@
-module Main exposing (..)
+module Main exposing (Flags, ModeModel(..), Model, Msg(..), PlayModel, main)
 
 import Browser
 import Css
 import Html as Unstyled
 import Html.Styled as Html
 import Html.Styled.Attributes as Attr
-import Html.Styled.Events as Evts exposing (..)
+import Html.Styled.Events as Evts
 import Lib.Slides
 import Presentation.Slides
 import Types exposing (Images)

@@ -1,4 +1,4 @@
-module Presentation.UI.Space exposing (..)
+module Presentation.UI.Space exposing (l, m, s, xs, xxl)
 
 import Element
 
@@ -26,11 +26,6 @@ m =
 l : Int
 l =
     scaled 4
-
-
-xl : Int
-xl =
-    scaled 5
 
 
 xxl : Int

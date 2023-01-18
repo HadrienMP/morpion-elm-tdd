@@ -1,4 +1,4 @@
-module Types exposing (..)
+module Types exposing (Images)
 
 
 type alias Images =

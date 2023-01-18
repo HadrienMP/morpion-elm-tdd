@@ -1,12 +1,12 @@
-module Presentation.Slide1 exposing (..)
+module Presentation.Slide1 exposing (view)
 
 import Element
-import Element.Border
-import Element.Font
+import Element.Border as Border
+import Element.Font as Font
 import ElmLogo
 import Presentation.Types
-import Presentation.UI.Space
-import Presentation.UI.Text
+import Presentation.UI.Space as Space
+import Presentation.UI.Text as Text
 
 
 view : Presentation.Types.Slide msg
@@ -16,15 +16,15 @@ view =
             Element.column
                 [ Element.centerX
                 , Element.alignTop
-                , Element.spacing Presentation.UI.Space.l
+                , Element.spacing Space.l
                 ]
                 [ Element.column [ Element.centerX ]
-                    [ Presentation.UI.Text.xxl2
-                        [ Element.Font.bold
+                    [ Text.xxl2
+                        [ Font.bold
                         , Element.centerX
                         ]
                         "Morpion"
-                    , Presentation.UI.Text.xl2 [ Element.centerX ] "Elm + TDD"
+                    , Text.xl2 [ Element.centerX ] "Elm + TDD"
                     ]
                 , Element.row
                     [ Element.spaceEvenly
@@ -56,5 +56,5 @@ imageStyle =
     [ Element.width <| Element.px imageSize
     , Element.height <| Element.px imageSize
     , Element.clip
-    , Element.Border.rounded 10
+    , Border.rounded 10
     ]

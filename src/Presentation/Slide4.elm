@@ -1,28 +1,28 @@
-module Presentation.Slide4 exposing (..)
+module Presentation.Slide4 exposing (view)
 
 import Element
-import Element.Font
+import Element.Font as Font
 import Presentation.Types
-import Presentation.UI.Space
-import Presentation.UI.Text
-import UI
+import Presentation.UI as UI
+import Presentation.UI.Space as Space
+import Presentation.UI.Text as Text
 
 
 view : Presentation.Types.Slide msg
 view =
     { content =
         \images ->
-            Element.row [ Element.spacing Presentation.UI.Space.l, Element.centerX ]
+            Element.row [ Element.spacing Space.l, Element.centerX ]
                 [ Element.el [ Element.alignTop ] <|
                     Element.image [ Element.width <| Element.px 140 ]
                         { src = images.tictactoe
                         , description = "Une grille de morpion, victoire de X"
                         }
-                , Element.column [ Element.spacing Presentation.UI.Space.m ]
-                    [ Presentation.UI.Text.l2 [ Element.Font.bold ] "Morpion : Règles"
+                , Element.column [ Element.spacing Space.m ]
+                    [ Text.l2 [ Font.bold ] "Morpion : Règles"
                     , Element.column []
-                        [ Presentation.UI.Text.s2 [ Element.Font.bold ] "Bases"
-                        , UI.ul [ Element.moveRight <| toFloat Presentation.UI.Space.m ]
+                        [ Text.s2 [ Font.bold ] "Bases"
+                        , UI.ul [ Element.moveRight <| toFloat Space.m ]
                             [ "2 joueurs : X et O"
                             , "Grille de 3x3"
                             , "X joue en premier"
@@ -31,14 +31,14 @@ view =
                             ]
                         ]
                     , Element.column []
-                        [ Presentation.UI.Text.s2 [ Element.Font.bold ] "Gagner avec 3 coups"
-                        , UI.ul [ Element.moveRight <| toFloat Presentation.UI.Space.m ]
+                        [ Text.s2 [ Font.bold ] "Gagner avec 3 coups"
+                        , UI.ul [ Element.moveRight <| toFloat Space.m ]
                             [ "en ligne"
                             , "en colonne"
                             , "en diagonale"
                             ]
                         ]
-                    , Presentation.UI.Text.s2 [ Element.Font.bold ] "Égalité si la grille est pleine"
+                    , Text.s2 [ Font.bold ] "Égalité si la grille est pleine"
                     ]
                 ]
     , background = Just { url = \images -> images.adventureTime, opacity = 0.3 }

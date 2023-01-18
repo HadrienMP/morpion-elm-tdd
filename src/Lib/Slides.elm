@@ -1,10 +1,10 @@
-module Lib.Slides exposing (..)
+module Lib.Slides exposing (Background, Model, Msg(..), Slide, init, subscriptions, update, view)
 
 import Browser.Events
 import Dict
 import Element exposing (Element)
-import Element.Background
-import Element.Font
+import Element.Background as Background
+import Element.Font as Font
 import Html exposing (Html)
 import Json.Decode as Decode
 
@@ -101,7 +101,7 @@ subscriptions _ =
 view : context -> Model context -> Html Msg
 view context model =
     Element.layout
-        [ Element.Font.color <| Element.rgb 1 1 1
+        [ Font.color <| Element.rgb 1 1 1
         ]
         (model.slides
             |> List.indexedMap Tuple.pair
@@ -115,7 +115,7 @@ view context model =
 slide : context -> Slide context msg -> Element msg
 slide context { content, background } =
     Element.el
-        [ Element.Background.color <| Element.rgb 0 0 0
+        [ Background.color <| Element.rgb 0 0 0
         , Element.width Element.fill
         , Element.height Element.fill
         , Element.inFront <| Element.row [] []
@@ -143,7 +143,7 @@ transparentBackground background context =
     case background of
         Just { url, opacity } ->
             Element.el
-                [ Element.Background.image <| url context
+                [ Background.image <| url context
                 , Element.alpha opacity
                 , Element.width Element.fill
                 , Element.height Element.fill

@@ -1,18 +1,18 @@
-module Presentation.Slide2 exposing (..)
+module Presentation.Slide2 exposing (view)
 
 import Element
-import Element.Border
-import Element.Font
-import Presentation.UI.Sides
-import Presentation.UI.Space
-import Presentation.UI.Text
+import Element.Border as Border
+import Element.Font as Font
+import Presentation.UI.Sides as Sides
+import Presentation.UI.Space as Space
+import Presentation.UI.Text as Text
 
 
 view =
     { content =
         \images ->
             Element.row
-                [ Element.spacing Presentation.UI.Space.xxl
+                [ Element.spacing Space.xxl
                 , Element.centerX
                 ]
                 [ profile
@@ -52,33 +52,33 @@ profile :
     }
     -> Element.Element msg
 profile it =
-    Element.column [ Element.alignTop, Element.spacing Presentation.UI.Space.m ]
+    Element.column [ Element.alignTop, Element.spacing Space.m ]
         [ Element.image medaillonStyle
             { src = it.image, description = "Une photo de " ++ it.firstName }
         , Element.column [ Element.centerX ]
-            [ Presentation.UI.Text.m2 [ Element.Font.bold, Element.centerX ] it.firstName
-            , Presentation.UI.Text.s2 [ Element.centerX ] it.lastName
+            [ Text.m2 [ Font.bold, Element.centerX ] it.firstName
+            , Text.s2 [ Element.centerX ] it.lastName
             ]
         , Element.column
             [ Element.centerX
-            , Presentation.UI.Sides.init
-                |> Presentation.UI.Sides.withTop 2
-                |> Presentation.UI.Sides.withBottom 2
-                |> Element.Border.widthEach
-            , Element.paddingXY 0 Presentation.UI.Space.m
-            , Element.spacing Presentation.UI.Space.xs
+            , Sides.init
+                |> Sides.withTop 2
+                |> Sides.withBottom 2
+                |> Border.widthEach
+            , Element.paddingXY 0 Space.m
+            , Element.spacing Space.xs
             ]
-            [ Presentation.UI.Text.xs2 [ Element.Font.bold, Element.centerX ] it.title1
-            , Presentation.UI.Text.xs2 [ Element.centerX ] it.title2
+            [ Text.xs2 [ Font.bold, Element.centerX ] it.title1
+            , Text.xs2 [ Element.centerX ] it.title2
             ]
-        , Element.column [ Element.centerX, Element.spacing Presentation.UI.Space.xs ]
+        , Element.column [ Element.centerX, Element.spacing Space.xs ]
             [ Element.newTabLink []
                 { url = "https://twitter.com/" ++ it.twitter
-                , label = Presentation.UI.Text.xs <| "🐦 @" ++ it.twitter
+                , label = Text.xs <| "🐦 @" ++ it.twitter
                 }
             , Element.newTabLink []
                 { url = "https://" ++ it.website
-                , label = Presentation.UI.Text.xs <| "🌐 " ++ it.website
+                , label = Text.xs <| "🌐 " ++ it.website
                 }
             ]
         , it.logo
@@ -91,9 +91,9 @@ medaillonStyle : List (Element.Attribute msg)
 medaillonStyle =
     [ Element.width <| Element.px 140
     , Element.height <| Element.px 140
-    , Element.Border.rounded 100
-    , Element.Border.color <| Element.rgb 1 1 1
-    , Element.Border.width 2
+    , Border.rounded 100
+    , Border.color <| Element.rgb 1 1 1
+    , Border.width 2
     , Element.clip
     , Element.centerX
     ]

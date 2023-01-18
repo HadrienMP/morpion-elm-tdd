@@ -1,4 +1,4 @@
-module Presentation.UI.Sides exposing (..)
+module Presentation.UI.Sides exposing (Sides, init, withBottom, withTop)
 
 
 type alias Sides =
@@ -19,26 +19,6 @@ withTop space sides =
     { sides | top = space }
 
 
-top : Int -> Sides
-top space =
-    init |> withTop space
-
-
 withBottom : Int -> Sides -> Sides
 withBottom space sides =
     { sides | bottom = space }
-
-
-bottom : Int -> Sides
-bottom space =
-    init |> withBottom space
-
-
-withLeft : Int -> Sides -> Sides
-withLeft space sides =
-    { sides | left = space }
-
-
-left : Int -> Sides
-left space =
-    init |> withLeft space

@@ -1,23 +1,23 @@
-module Presentation.Slide3 exposing (..)
+module Presentation.Slide3 exposing (view)
 
 import Element
-import Element.Font
+import Element.Font as Font
 import ElmLogo
 import Presentation.Types
-import Presentation.UI.Space
-import Presentation.UI.Text
-import UI
+import Presentation.UI as UI
+import Presentation.UI.Space as Space
+import Presentation.UI.Text as Text
 
 
 view : Presentation.Types.Slide msg
 view =
     { content =
         \images ->
-            Element.column [ Element.centerX, Element.spacing Presentation.UI.Space.l ]
-                [ Element.row [ Element.spacing Presentation.UI.Space.l ]
+            Element.column [ Element.centerX, Element.spacing Space.l ]
+                [ Element.row [ Element.spacing Space.l ]
                     [ Element.el [ Element.alignTop ] <| ElmLogo.element 140
-                    , Element.column [ Element.spacing Presentation.UI.Space.s ]
-                        [ Presentation.UI.Text.l2 [ Element.Font.bold ] "Elm"
+                    , Element.column [ Element.spacing Space.s ]
+                        [ Text.l2 [ Font.bold ] "Elm"
                         , UI.ul []
                             [ "Evan Czapliki : 2012"
                             , "Frontend"
@@ -28,7 +28,7 @@ view =
                         ]
                     ]
                 , UI.hr
-                , Element.row [ Element.spacing Presentation.UI.Space.l ]
+                , Element.row [ Element.spacing Space.l ]
                     [ Element.el [ Element.alignTop ] <|
                         Element.image
                             [ Element.width <| Element.px 140
@@ -37,14 +37,14 @@ view =
                             { src = images.tdd
                             , description = "Le cycle TDD: Red Green Refactor"
                             }
-                    , Element.column [ Element.spacing Presentation.UI.Space.s ]
-                        [ Presentation.UI.Text.l2 [ Element.Font.bold ] "TDD"
+                    , Element.column [ Element.spacing Space.s ]
+                        [ Text.l2 [ Font.bold ] "TDD"
                         , UI.ul []
                             [ "Kent Beck : 1999"
                             , "Technique de design"
                             , "Cycle :"
                             ]
-                        , UI.ol [ Element.moveRight <| toFloat Presentation.UI.Space.l ] [ "1 test simple", "correction évidente/anarque", "refactor" ]
+                        , UI.ol [ Element.moveRight <| toFloat Space.l ] [ "1 test simple", "correction évidente/anarque", "refactor" ]
                         ]
                     ]
                 ]
