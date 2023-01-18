@@ -1,24 +1,19 @@
 module Presentation.Slide2 exposing (..)
 
-import Css
-import ElmLogo
-import Html.Styled as Html
-import Html.Styled.Attributes as Attr
-import Presentation.Library exposing (Slide)
-import Presentation.Slide1
-import Presentation.Types
-import Types exposing (Images)
-import UI
+import Element
+import Element.Border
+import Element.Font
+import UI.Sides
+import UI.Space
+import UI.Text
 
 
 view =
     { content =
         \images ->
-            Html.div
-                [ Attr.css
-                    [ Css.displayFlex
-                    , Css.justifyContent Css.spaceAround
-                    ]
+            Element.row
+                [ Element.spacing UI.Space.xxxLarge
+                , Element.centerX
                 ]
                 [ profile
                     { image = images.hadrien
@@ -55,69 +50,50 @@ profile :
     , website : String
     , logo : Maybe String
     }
-    -> Html.Html msg
+    -> Element.Element msg
 profile it =
-    Html.div
-        [ Attr.css
-            [ Css.textAlign Css.center
-            , Css.displayFlex
-            , Css.flexDirection Css.column
-            , Css.property "gap" "1rem"
-            , Css.fontSize <| Css.rem 1.3
+    Element.column [ Element.alignTop, Element.spacing UI.Space.large ]
+        [ Element.image medaillonStyle
+            { src = it.image, description = "Une photo de " ++ it.firstName }
+        , Element.column [ Element.centerX ]
+            [ UI.Text.large2 [ Element.Font.bold, Element.centerX ] it.firstName
+            , UI.Text.medium2 [ Element.centerX ] it.lastName
             ]
+        , Element.column
+            [ Element.centerX
+            , UI.Sides.init
+                |> UI.Sides.withTop 2
+                |> UI.Sides.withBottom 2
+                |> Element.Border.widthEach
+            , Element.paddingXY 0 UI.Space.large
+            , Element.spacing UI.Space.small
+            ]
+            [ UI.Text.small2 [ Element.Font.bold, Element.centerX ] it.title1
+            , UI.Text.small2 [ Element.centerX ] it.title2
+            ]
+        , Element.column [ Element.centerX, Element.spacing UI.Space.small ]
+            [ Element.link []
+                { url = "https://twitter.com/" ++ it.twitter
+                , label = UI.Text.small <| "🐦 @" ++ it.twitter
+                }
+            , Element.link []
+                { url = "https://" ++ it.website
+                , label = UI.Text.small <| "🌐 " ++ it.website
+                }
+            ]
+        , it.logo
+            |> Maybe.map (\a -> Element.image medaillonStyle { src = a, description = "" })
+            |> Maybe.withDefault Element.none
         ]
-        [ Html.img
-            [ Attr.src it.image
-            , Attr.css
-                [ Css.width <| Css.rem 10
-                , Css.borderRadius <| Css.pct 50
-                , Css.border3 (Css.px 2) Css.solid <| Css.hex "#fff"
-                , Css.height <| Css.rem 10
-                , Css.marginBottom <| Css.rem 1
-                ]
-            ]
-            []
-        , Html.div []
-            [ Html.h2 [ Attr.css [ Css.fontSize <| Css.rem 3 ] ] [ Html.text it.firstName ]
-            , Html.h3 [ Attr.css [ Css.fontSize <| Css.rem 2 ] ] [ Html.text it.lastName ]
-            ]
-        , Html.hr [ Attr.css [ Css.width <| Css.pct 100 ] ] []
-        , Html.div []
-            [ Html.p [ Attr.css [ Css.fontSize <| Css.rem 1.6 ] ] [ Html.text it.title1 ]
-            , Html.p [] [ Html.text it.title2 ]
-            ]
-        , Html.hr [ Attr.css [ Css.width <| Css.pct 100 ] ] []
-        , Html.div
-            [ Attr.css
-                [ Css.color <| Css.hex "#63c4ff"
-                , Css.displayFlex
-                , Css.flexDirection Css.column
-                ]
-            ]
-            [ Html.a
-                [ Attr.href <| "https://twitter.com/" ++ it.twitter
-                , Attr.target "blank"
-                ]
-                [ Html.text <| "🐦 @" ++ it.twitter ]
-            , Html.a
-                [ Attr.href <| "https://" ++ it.website
-                , Attr.target "blank"
-                ]
-                [ Html.text <| "🌐 " ++ it.website ]
-            ]
-        , case it.logo of
-            Just logo ->
-                Html.img
-                    [ Attr.src logo
-                    , Attr.css
-                        [ Css.borderRadius <| Css.pct 50
-                        , Css.width <| Css.rem 8
-                        , Css.margin2 Css.zero Css.auto
-                        , Css.marginTop <| Css.rem 2
-                        ]
-                    ]
-                    []
 
-            Nothing ->
-                Html.div [] []
-        ]
+
+medaillonStyle : List (Element.Attribute msg)
+medaillonStyle =
+    [ Element.width <| Element.px 140
+    , Element.height <| Element.px 140
+    , Element.Border.rounded 100
+    , Element.Border.color <| Element.rgb 1 1 1
+    , Element.Border.width 2
+    , Element.clip
+    , Element.centerX
+    ]

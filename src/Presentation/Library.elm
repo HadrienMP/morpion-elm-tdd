@@ -3,9 +3,10 @@ module Presentation.Library exposing (..)
 import Browser.Events
 import Css
 import Dict
-import Html.Styled as Html exposing (Html)
-import Html.Styled.Attributes as Attr
-import Html.Styled.Events as Evts exposing (..)
+import Element exposing (Element)
+import Element.Background
+import Element.Font
+import Html exposing (Html)
 import Json.Decode as Decode
 
 
@@ -27,7 +28,7 @@ init slides =
 
 
 type alias Slide context msg =
-    { content : context -> Html msg, background : Maybe (context -> String) }
+    { content : context -> Element msg, background : Maybe (context -> String) }
 
 
 
@@ -92,72 +93,122 @@ subscriptions _ =
 
 view : context -> Model context -> Html Msg
 view context model =
-    Html.div
-        [ Attr.css
-            [ Css.position Css.relative
-            , Css.height <| Css.pct 100
-            ]
+    Element.layout
+        [ Element.Font.color <| Element.rgb 1 1 1
         ]
-        [ model.slides
+        (model.slides
             |> List.indexedMap Tuple.pair
             |> Dict.fromList
             |> Dict.get model.currentSlide
             |> Maybe.map (slide context)
-            |> Maybe.withDefault (Html.h1 [] [ Html.text <| "What slide now ? " ++ String.fromInt model.currentSlide ])
-        , Html.div
-            [ Attr.css
-                [ Css.position Css.absolute
-                , Css.right <| Css.rem 4
-                , Css.bottom <| Css.rem 4
-                ]
-            ]
-            [ Html.button [ Evts.onClick Previous ] [ Html.text "<" ]
-            , Html.button [ Evts.onClick Next ] [ Html.text ">" ]
-            ]
-        ]
+            |> Maybe.withDefault (Element.text <| "What slide now ? " ++ String.fromInt model.currentSlide)
+        )
 
 
-slide : context -> Slide context msg -> Html msg
+
+-- Html.div
+--     [ Attr.css
+--         [ Css.position Css.relative
+--         , Css.height <| Css.pct 100
+--         ]
+--     ]
+--     [ model.slides
+--         |> List.indexedMap Tuple.pair
+--         |> Dict.fromList
+--         |> Dict.get model.currentSlide
+--         |> Maybe.map (slide context)
+--         |> Maybe.withDefault (Html.h1 [] [ Html.text <| "What slide now ? " ++ String.fromInt model.currentSlide ])
+--     , Html.div
+--         [ Attr.css
+--             [ Css.position Css.absolute
+--             , Css.right <| Css.rem 4
+--             , Css.bottom <| Css.rem 4
+--             ]
+--         ]
+--         [ Html.button [ Evts.onClick Previous ] [ Html.text "<" ]
+--         , Html.button [ Evts.onClick Next ] [ Html.text ">" ]
+--         ]
+--     ]
+
+
+slide : context -> Slide context msg -> Element msg
 slide context { content, background } =
-    Html.div
-        [ Attr.class "slide"
-        , Attr.css
-            [ Css.position Css.relative
-            , Css.height <| Css.pct 100
-            ]
+    Element.el
+        [ Element.Background.color <| Element.rgb 0 0 0
+        , Element.width Element.fill
+        , Element.height Element.fill
+        , Element.inFront <| Element.row [] []
         ]
-        [ Html.div
-            [ Attr.css
-                [ case background of
-                    Just it ->
-                        Css.backgroundImage <| Css.url <| it context
+    <|
+        Element.el
+            [ Element.behindContent <| transparentBackground background context
+            , Element.width Element.fill
+            , Element.height Element.fill
+            ]
+        <|
+            Element.el
+                [ Element.width <| Element.maximum 920 <| Element.fill
+                , Element.height <| Element.maximum 700 <| Element.fill
+                , Element.centerX
+                , Element.centerY
+                , Element.padding 20
+                ]
+            <|
+                content context
 
-                    Nothing ->
-                        Css.backgroundImage Css.none
-                , Css.backgroundSize <| Css.cover
-                , Css.backgroundPosition Css.right
-                , Css.position Css.absolute
-                , Css.top Css.zero
-                , Css.bottom Css.zero
-                , Css.left Css.zero
-                , Css.right Css.zero
-                , Css.opacity <| Css.num 0.3
-                ]
-            ]
-            []
-        , Html.div
-            [ Attr.css
-                [ Css.position Css.absolute
-                , Css.zIndex <| Css.int 10
-                , Css.maxHeight <| Css.pct 98
-                , Css.maxWidth <| Css.pct 98
-                , Css.width <| Css.px 960
-                , Css.height <| Css.px 700
-                , Css.top <| Css.pct 50
-                , Css.left <| Css.vw 50
-                , Css.transform <| Css.translate2 (Css.pct -50) (Css.pct -50)
-                , Css.overflow Css.hidden
-                ]
-            ]
-            [ content context ]
+
+transparentBackground : Maybe (context -> String) -> context -> Element msg
+transparentBackground background context =
+    Element.el
+        [ background
+            |> Maybe.map (\a -> Element.Background.image <| a context)
+            |> Maybe.withDefault (Element.alpha 1)
+        , Element.alpha 0.4
+        , Element.width Element.fill
+        , Element.height Element.fill
         ]
+        Element.none
+
+
+
+-- Html.div
+--     [ Attr.class "slide"
+--     , Attr.css
+--         [ Css.position Css.relative
+--         , Css.height <| Css.pct 100
+--         ]
+--     ]
+--     [ Html.div
+--         [ Attr.css
+--             [ case background of
+--                 Just it ->
+--                     Css.backgroundImage <| Css.url <| it context
+--                 Nothing ->
+--                     Css.backgroundImage Css.none
+--             , Css.backgroundSize <| Css.cover
+--             , Css.backgroundPosition Css.right
+--             , Css.position Css.absolute
+--             , Css.top Css.zero
+--             , Css.bottom Css.zero
+--             , Css.left Css.zero
+--             , Css.right Css.zero
+--             , Css.opacity <| Css.num 0.3
+--             ]
+--         ]
+--         []
+--     , Html.div
+--         [ Attr.css
+--             [ Css.position Css.absolute
+--             , Css.zIndex <| Css.int 10
+--             , Css.maxHeight <| Css.pct 98
+--             , Css.maxWidth <| Css.pct 98
+--             , Css.width <| Css.px 960
+--             , Css.height <| Css.px 700
+--             , Css.top <| Css.pct 50
+--             , Css.left <| Css.vw 50
+--             , Css.transform <| Css.translate2 (Css.pct -50) (Css.pct -50)
+--             , Css.overflow Css.hidden
+--             ]
+--         ]
+--         [ content context ]
+--     ]

@@ -1,32 +1,50 @@
 module Presentation.Slide3 exposing (..)
 
-import Css
+import Element
 import ElmLogo
-import Html.Styled as Html
-import Html.Styled.Attributes as Attr
 import Presentation.Types
 import UI
+import UI.Space
+import UI.Text
 
 
 view : Presentation.Types.Slide msg
 view =
     { content =
         \images ->
-            Html.div []
-                [ Html.div
-                    [ [ Css.displayFlex
-                      , Css.property "gap" "2rem"
-                      , Css.alignItems Css.center
-                      ]
-                        |> Attr.css
+            Element.column [ Element.centerX, Element.spacing UI.Space.xLarge ]
+                [ Element.row [ Element.spacing UI.Space.xLarge ]
+                    [ Element.el [ Element.alignTop ] <| ElmLogo.element 140
+                    , Element.column [ Element.spacing UI.Space.medium ]
+                        [ UI.Text.xLarge "Elm"
+                        , UI.ul []
+                            [ "Evan Czapliki : 2012"
+                            , "Frontend"
+                            , "Fonctionnel"
+                            , "Minimaliste"
+                            , "Super système de types"
+                            ]
+                        ]
                     ]
-                    [ ElmLogo.html 140 |> Html.fromUnstyled
-                    , UI.veryBigText "Elm"
-                    ]
-                , Html.ul []
-                    [ Html.li [] [ UI.smallText "Fonctionnel" ]
-                    , Html.li [] [ UI.smallText "Minimaliste" ]
-                    , Html.li [] [ UI.smallText "Super système de types" ]
+                , UI.hr
+                , Element.row [ Element.spacing UI.Space.xLarge ]
+                    [ Element.el [ Element.alignTop ] <|
+                        Element.image
+                            [ Element.width <| Element.px 140
+                            , Element.height <| Element.px 140
+                            ]
+                            { src = images.tdd
+                            , description = "Le cycle TDD: Red Green Refactor"
+                            }
+                    , Element.column [ Element.spacing UI.Space.medium ]
+                        [ UI.Text.xLarge "TDD"
+                        , UI.ul []
+                            [ "Kent Beck : 1999"
+                            , "Technique de design"
+                            , "Cycle :"
+                            ]
+                        , UI.ol [ Element.moveRight <| toFloat UI.Space.xLarge ] [ "1 test simple", "correction évidente/anarque", "refactor" ]
+                        ]
                     ]
                 ]
     , background = Just <| \images -> images.adventureTime

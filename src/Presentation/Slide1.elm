@@ -1,57 +1,53 @@
 module Presentation.Slide1 exposing (..)
 
-import Css
+import Element
+import Element.Border
+import Element.Font
 import ElmLogo
-import Html.Styled as Html
-import Html.Styled.Attributes as Attr
 import Presentation.Types
-import UI
+import UI.Space
+import UI.Text
 
 
 view : Presentation.Types.Slide msg
 view =
     { content =
         \images ->
-            Html.div
-                [ [ Css.textAlign Css.center
-                  , Css.displayFlex
-                  , Css.flexDirection Css.column
-                  , Css.property "gap" "3rem"
-                  ]
-                    |> UI.centerX
-                    |> Attr.css
+            Element.column
+                [ Element.centerX
+                , Element.alignTop
+                , Element.spacing UI.Space.xLarge
                 ]
-                [ Html.div [ Attr.css [ Css.minWidth Css.maxContent ] ]
-                    [ Html.h1
-                        [ Attr.css
-                            [ Css.fontSize <| Css.rem 5
-                            , Css.lineHeight <| Css.num 1
-                            ]
+                [ Element.column [ Element.centerX ]
+                    [ UI.Text.xLarge2
+                        [ Element.Font.bold
+                        , Element.centerX
                         ]
-                        [ Html.text "Jeu du Morpion" ]
-                    , Html.h2
-                        [ Attr.css
-                            [ Css.fontSize <| Css.rem 2
-                            ]
-                        ]
-                        [ Html.text "Elm + TDD" ]
+                        "Jeu du Morpion"
+                    , UI.Text.large2 [ Element.centerX ] "Elm + TDD"
                     ]
-                , Html.div [ Attr.css [ Css.displayFlex, Css.justifyContent Css.spaceBetween ] ]
-                    [ Html.img
-                        [ Attr.src images.tictactoe
-                        , Attr.css [ Css.width <| Css.px 140 ]
-                        ]
-                        []
-                    , Html.fromUnstyled <| ElmLogo.html 140
-                    , Html.img
-                        [ Attr.src images.tdd
-                        , Attr.css
-                            [ Css.maxWidth <| Css.px 140
-                            , Css.property "object-fit" "cover"
-                            ]
-                        ]
-                        []
+                , Element.row
+                    [ Element.spacing UI.Space.small
+                    ]
+                    [ Element.image imageStyle
+                        { src = images.tictactoe
+                        , description = "Une grille de morpion"
+                        }
+                    , Element.el imageStyle <| ElmLogo.element 140
+                    , Element.image imageStyle
+                        { src = images.tdd
+                        , description = "Le cycle red green refactor"
+                        }
                     ]
                 ]
     , background = Just <| \images -> images.adventureTime
     }
+
+
+imageStyle : List (Element.Attribute msg)
+imageStyle =
+    [ Element.width <| Element.px 140
+    , Element.height <| Element.px 140
+    , Element.clip
+    , Element.Border.rounded 10
+    ]

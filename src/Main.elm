@@ -147,6 +147,7 @@ view model =
                         Presentation.Library.view
                             model.images
                             presentation
+                            |> Html.fromUnstyled
                             |> Html.map PresentationMsg
 
                     Game _ ->
