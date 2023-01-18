@@ -6,7 +6,7 @@ import Html as Unstyled
 import Html.Styled as Html
 import Html.Styled.Attributes as Attr
 import Html.Styled.Events as Evts exposing (..)
-import Presentation.Library
+import Lib.Slides
 import Presentation.Slides
 import Types exposing (Images)
 
@@ -40,7 +40,7 @@ type alias PlayModel =
 
 type ModeModel
     = Game PlayModel
-    | Presentation (Presentation.Library.Model Images)
+    | Presentation (Lib.Slides.Model Images)
 
 
 type alias Model =
@@ -53,7 +53,7 @@ init : Flags -> ( Model, Cmd Msg )
 init flags =
     ( { mode =
             Presentation.Slides.slides
-                |> Presentation.Library.init
+                |> Lib.Slides.init
                 |> Presentation
       , images = flags.images
       }
@@ -66,7 +66,7 @@ init flags =
 
 
 type Msg
-    = PresentationMsg Presentation.Library.Msg
+    = PresentationMsg Lib.Slides.Msg
     | SwitchMode
 
 
@@ -80,14 +80,14 @@ update msg model =
             ( { model
                 | mode =
                     Presentation.Slides.slides
-                        |> Presentation.Library.init
+                        |> Lib.Slides.init
                         |> Presentation
               }
             , Cmd.none
             )
 
         ( PresentationMsg subMsg, Presentation subModel ) ->
-            Presentation.Library.update subMsg subModel
+            Lib.Slides.update subMsg subModel
                 |> Tuple.mapBoth
                     (\updated -> { model | mode = Presentation updated })
                     (Cmd.map <| PresentationMsg)
@@ -104,7 +104,7 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     case model.mode of
         Presentation presentation ->
-            Presentation.Library.subscriptions presentation
+            Lib.Slides.subscriptions presentation
                 |> Sub.map PresentationMsg
 
         _ ->
@@ -144,7 +144,7 @@ view model =
                 ]
                 [ case model.mode of
                     Presentation presentation ->
-                        Presentation.Library.view
+                        Lib.Slides.view
                             model.images
                             presentation
                             |> Html.fromUnstyled

@@ -1,8 +1,8 @@
 module Presentation.Types exposing (..)
 
-import Presentation.Library
+import Lib.Slides
 import Types exposing (Images)
 
 
 type alias Slide msg =
-    Presentation.Library.Slide Images msg
+    Lib.Slides.Slide Images msg

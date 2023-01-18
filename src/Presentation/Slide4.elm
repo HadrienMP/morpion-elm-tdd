@@ -41,5 +41,5 @@ view =
                     , UI.Text.medium2 [ Element.Font.bold ] "Égalité si la grille est pleine"
                     ]
                 ]
-    , background = Just <| \images -> images.adventureTime
+    , background = Just { url = \images -> images.adventureTime, opacity = 0.3 }
     }

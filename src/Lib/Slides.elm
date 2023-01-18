@@ -1,4 +1,4 @@
-module Presentation.Library exposing (..)
+module Lib.Slides exposing (..)
 
 import Browser.Events
 import Dict
@@ -26,8 +26,16 @@ init slides =
     { currentSlide = 0, slides = slides }
 
 
+type alias Background context =
+    { url : context -> String
+    , opacity : Float
+    }
+
+
 type alias Slide context msg =
-    { content : context -> Element msg, background : Maybe (context -> String) }
+    { content : context -> Element msg
+    , background : Maybe (Background context)
+    }
 
 
 
@@ -130,14 +138,17 @@ slide context { content, background } =
                 content context
 
 
-transparentBackground : Maybe (context -> String) -> context -> Element msg
+transparentBackground : Maybe (Background context) -> context -> Element msg
 transparentBackground background context =
-    Element.el
-        [ background
-            |> Maybe.map (\a -> Element.Background.image <| a context)
-            |> Maybe.withDefault (Element.alpha 1)
-        , Element.alpha 0.4
-        , Element.width Element.fill
-        , Element.height Element.fill
-        ]
-        Element.none
+    case background of
+        Just { url, opacity } ->
+            Element.el
+                [ Element.Background.image <| url context
+                , Element.alpha opacity
+                , Element.width Element.fill
+                , Element.height Element.fill
+                ]
+                Element.none
+
+        Nothing ->
+            Element.none

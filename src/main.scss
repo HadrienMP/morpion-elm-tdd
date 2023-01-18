@@ -8,6 +8,11 @@ body {
     line-height: 1.2;
 }
 
+body>div>div:nth-child(2) {
+    top: 0.6rem !important;
+    right: 0.6rem !important;
+}
+
 header {
     padding: 1rem;
     display: flex;

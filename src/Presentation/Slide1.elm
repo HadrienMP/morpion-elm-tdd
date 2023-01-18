@@ -42,7 +42,7 @@ view =
                         }
                     ]
                 ]
-    , background = Just <| \images -> images.adventureTime
+    , background = Just { url = \images -> images.adventureTime, opacity = 0.3 }
     }
 
 
