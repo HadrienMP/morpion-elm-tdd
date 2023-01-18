@@ -1,7 +1,6 @@
-module Lib.Slides exposing (Background, Model, Msg(..), Slide, init, subscriptions, update, view)
+module Lib.Slides exposing (Background(..), Model, Msg(..), Slide, init, subscriptions, update, view)
 
 import Browser.Events
-import Dict
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Font as Font
@@ -20,18 +19,24 @@ import Json.Decode as Decode
 type alias Model context =
     { currentSlide : Int
     , slides : List (Slide context Msg)
+    , background : Background context
+    }
+
+
+type Background context
+    = Image (ImageBackground context)
+    | Color { r : Int, g : Int, b : Int, a : Float }
+
+
+type alias ImageBackground context =
+    { url : context -> String
+    , opacity : Float
     }
 
 
 init : List (Slide context Msg) -> Model context
 init slides =
-    { currentSlide = 0, slides = slides }
-
-
-type alias Background context =
-    { url : context -> String
-    , opacity : Float
-    }
+    { currentSlide = 0, slides = slides, background = Color { r = 0, b = 0, g = 0, a = 0 } }
 
 
 type alias Slide context msg =
@@ -112,6 +117,7 @@ view context model =
         }
         [ Font.color <| Element.rgb 1 1 1
         , Element.clip
+        , Element.behindContent <| toto context model.background
         , Element.inFront <|
             Element.column
                 [ Element.alignBottom
@@ -199,8 +205,7 @@ slide :
     -> Element msg
 slide { context, totalSlides } ( index, { content, background } ) =
     Element.el
-        [ Background.color <| Element.rgb 0 0 0
-        , Element.inFront <| Element.row [] []
+        [ Element.inFront <| Element.row [] []
         , Element.height Element.fill
         , Element.htmlAttribute <|
             Html.Attributes.style "flex" <|
@@ -227,9 +232,18 @@ slide { context, totalSlides } ( index, { content, background } ) =
 
 
 transparentBackground : Maybe (Background context) -> context -> Element msg
-transparentBackground background context =
+transparentBackground maybeBackground context =
+    case maybeBackground of
+        Just background ->
+            toto context background
+
+        Nothing ->
+            Element.none
+
+
+toto context background =
     case background of
-        Just { url, opacity } ->
+        Image { url, opacity } ->
             Element.el
                 [ Background.image <| url context
                 , Element.alpha opacity
@@ -238,5 +252,10 @@ transparentBackground background context =
                 ]
                 Element.none
 
-        Nothing ->
-            Element.none
+        Color { r, g, b, a } ->
+            Element.el
+                [ Background.color <| Element.rgba255 r g b a
+                , Element.width Element.fill
+                , Element.height Element.fill
+                ]
+                Element.none

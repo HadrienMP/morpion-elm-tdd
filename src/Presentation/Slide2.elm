@@ -36,7 +36,7 @@ view =
                     , logo = Just images.shodo
                     }
                 ]
-    , background = Just { url = \images -> images.adventureTime, opacity = 0.3 }
+    , background = Nothing
     }
 
 

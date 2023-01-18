@@ -51,10 +51,7 @@ type alias Model =
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { mode =
-            Presentation.Slides.slides
-                |> Lib.Slides.init
-                |> Presentation
+    ( { mode = Presentation.Slides.init |> Presentation
       , images = flags.images
       }
     , Cmd.none
@@ -77,12 +74,7 @@ update msg model =
             ( { model | mode = Game () }, Cmd.none )
 
         ( SwitchMode, Game _ ) ->
-            ( { model
-                | mode =
-                    Presentation.Slides.slides
-                        |> Lib.Slides.init
-                        |> Presentation
-              }
+            ( { model | mode = Presentation.Slides.init |> Presentation }
             , Cmd.none
             )
 

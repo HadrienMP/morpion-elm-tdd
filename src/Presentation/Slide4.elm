@@ -41,5 +41,5 @@ view =
                     , Text.s2 [ Font.bold ] "Égalité si la grille est pleine"
                     ]
                 ]
-    , background = Just { url = \images -> images.adventureTime, opacity = 0.3 }
+    , background = Nothing
     }
