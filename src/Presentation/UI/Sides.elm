@@ -1,4 +1,4 @@
-module UI.Sides exposing (..)
+module Presentation.UI.Sides exposing (..)
 
 
 type alias Sides =

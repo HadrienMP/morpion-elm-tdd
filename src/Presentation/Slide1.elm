@@ -5,8 +5,8 @@ import Element.Border
 import Element.Font
 import ElmLogo
 import Presentation.Types
-import UI.Space
-import UI.Text
+import Presentation.UI.Space
+import Presentation.UI.Text
 
 
 view : Presentation.Types.Slide msg
@@ -16,15 +16,15 @@ view =
             Element.column
                 [ Element.centerX
                 , Element.alignTop
-                , Element.spacing UI.Space.xLarge
+                , Element.spacing Presentation.UI.Space.l
                 ]
                 [ Element.column [ Element.centerX ]
-                    [ UI.Text.xGiga2
+                    [ Presentation.UI.Text.xxl2
                         [ Element.Font.bold
                         , Element.centerX
                         ]
                         "Morpion"
-                    , UI.Text.giga2 [ Element.centerX ] "Elm + TDD"
+                    , Presentation.UI.Text.xl2 [ Element.centerX ] "Elm + TDD"
                     ]
                 , Element.row
                     [ Element.spaceEvenly

@@ -1,4 +1,4 @@
-module UI.Space exposing (..)
+module Presentation.UI.Space exposing (..)
 
 import Element
 
@@ -8,31 +8,31 @@ scaled =
     Element.modular 6 2 >> round
 
 
-small : Int
-small =
+xs : Int
+xs =
     scaled 1
 
 
-medium : Int
-medium =
+s : Int
+s =
     scaled 2
 
 
-large : Int
-large =
+m : Int
+m =
     scaled 3
 
 
-xLarge : Int
-xLarge =
+l : Int
+l =
     scaled 4
 
 
-xxLarge : Int
-xxLarge =
+xl : Int
+xl =
     scaled 5
 
 
-xxxLarge : Int
-xxxLarge =
+xxl : Int
+xxl =
     scaled 6

@@ -2,8 +2,8 @@ module UI exposing (..)
 
 import Element
 import Element.Border
-import UI.Space
-import UI.Text
+import Presentation.UI.Space
+import Presentation.UI.Text
 
 
 hr : Element.Element msg
@@ -14,13 +14,13 @@ hr =
 ul : List (Element.Attribute msg) -> List String -> Element.Element msg
 ul attributes =
     List.map ((++) "- ")
-        >> List.map UI.Text.medium
-        >> Element.column (Element.spacing UI.Space.small :: attributes)
+        >> List.map Presentation.UI.Text.s
+        >> Element.column (Element.spacing Presentation.UI.Space.xs :: attributes)
 
 
 ol : List (Element.Attribute msg) -> List String -> Element.Element msg
 ol attributes =
     List.indexedMap Tuple.pair
         >> List.map (\( i, el ) -> String.fromInt (i + 1) ++ ". " ++ el)
-        >> List.map UI.Text.small
-        >> Element.column (Element.spacing UI.Space.small :: attributes)
+        >> List.map Presentation.UI.Text.xs
+        >> Element.column (Element.spacing Presentation.UI.Space.xs :: attributes)
