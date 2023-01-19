@@ -117,7 +117,7 @@ view context model =
         }
         [ Font.color <| Element.rgb 1 1 1
         , Element.clip
-        , Element.behindContent <| toto context model.background
+        , Element.behindContent <| displayBackground context model.background
         , Element.inFront <|
             Element.column
                 [ Element.alignBottom
@@ -207,6 +207,7 @@ slide { context, totalSlides } ( index, { content, background } ) =
     Element.el
         [ Element.inFront <| Element.row [] []
         , Element.height Element.fill
+        , Element.clip
         , Element.htmlAttribute <|
             Html.Attributes.style "flex" <|
                 "0 0 "
@@ -232,16 +233,14 @@ slide { context, totalSlides } ( index, { content, background } ) =
 
 
 transparentBackground : Maybe (Background context) -> context -> Element msg
-transparentBackground maybeBackground context =
-    case maybeBackground of
-        Just background ->
-            toto context background
-
-        Nothing ->
-            Element.none
+transparentBackground background context =
+    background
+        |> Maybe.map (displayBackground context)
+        |> Maybe.withDefault Element.none
 
 
-toto context background =
+displayBackground : context -> Background context -> Element msg
+displayBackground context background =
     case background of
         Image { url, opacity } ->
             Element.el
