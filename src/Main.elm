@@ -1,14 +1,19 @@
 module Main exposing (Flags, ModeModel(..), Model, Msg(..), PlayModel, main)
 
 import Browser
-import Css
-import Html as Unstyled
-import Html.Styled as Html
-import Html.Styled.Attributes as Attr
-import Html.Styled.Events as Evts
+import Browser.Navigation
+import Element
+import Element.Background
+import Element.Font
+import Element.Region
 import Lib.Slides
 import Presentation.Slides
+import Routes
+import Shared
 import Types exposing (Images)
+import UI.Colors
+import UI.Space
+import Url
 
 
 
@@ -22,11 +27,13 @@ type alias Flags =
 
 main : Program Flags Model Msg
 main =
-    Browser.element
+    Browser.application
         { init = init
         , update = update
         , subscriptions = subscriptions
         , view = view
+        , onUrlChange = SharedMsg << Shared.UrlChanged
+        , onUrlRequest = SharedMsg << Shared.LinkClicked
         }
 
 
@@ -46,16 +53,31 @@ type ModeModel
 type alias Model =
     { images : Images
     , mode : ModeModel
+    , shared : Shared.Shared
     }
 
 
-init : Flags -> ( Model, Cmd Msg )
-init flags =
-    ( { mode = Presentation.Slides.init |> Presentation
+init : Flags -> Url.Url -> Browser.Navigation.Key -> ( Model, Cmd Msg )
+init flags url key =
+    ( { mode = initMode url
       , images = flags.images
+      , shared =
+            { url = url
+            , key = key
+            }
       }
     , Cmd.none
     )
+
+
+initMode : Url.Url -> ModeModel
+initMode url =
+    case Routes.parse url of
+        Routes.Game ->
+            Game ()
+
+        Routes.Presentation ->
+            Presentation.Slides.init url |> Presentation
 
 
 
@@ -65,24 +87,20 @@ init flags =
 type Msg
     = PresentationMsg Lib.Slides.Msg
     | SwitchMode
+    | SharedMsg Shared.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model.mode ) of
-        ( SwitchMode, Presentation _ ) ->
-            ( { model | mode = Game () }, Cmd.none )
-
-        ( SwitchMode, Game _ ) ->
-            ( { model | mode = Presentation.Slides.init |> Presentation }
-            , Cmd.none
-            )
-
         ( PresentationMsg subMsg, Presentation subModel ) ->
-            Lib.Slides.update subMsg subModel
+            Lib.Slides.update model.shared.key subMsg subModel
                 |> Tuple.mapBoth
                     (\updated -> { model | mode = Presentation updated })
                     (Cmd.map <| PresentationMsg)
+
+        ( SharedMsg subMsg, _ ) ->
+            Shared.update subMsg model.shared |> Tuple.mapBoth (\next -> { model | shared = next, mode = initMode next.url }) (Cmd.map SharedMsg)
 
         _ ->
             ( model, Cmd.none )
@@ -107,42 +125,59 @@ subscriptions model =
 -- VIEW
 
 
-view : Model -> Unstyled.Html Msg
+view : Model -> Browser.Document Msg
 view model =
-    Html.toUnstyled <|
-        Html.div
-            [ Attr.css
-                [ Css.displayFlex
-                , Css.flexDirection Css.column
-                , Css.height <| Css.pct 100
-                , Css.color <| Css.hex "#fff"
-                , Css.backgroundColor <| Css.hex "#000"
+    { title = "Morpion"
+    , body =
+        [ Element.layoutWith
+            { options =
+                [ Element.focusStyle
+                    { borderColor = Nothing
+                    , backgroundColor = Nothing
+                    , shadow = Nothing
+                    }
                 ]
+            }
+            [ Element.Background.color UI.Colors.background
+            , Element.Font.color UI.Colors.onBackground
             ]
-            [ Html.header [ Attr.css [ Css.backgroundColor <| Css.hex "#000" ] ]
-                [ Html.h1 [] [ Html.text "Morpion" ]
-                , case model.mode of
-                    Presentation _ ->
-                        Html.button [ Evts.onClick SwitchMode ] [ Html.text "Jouer" ]
+          <|
+            Element.column
+                [ Element.height Element.fill
+                , Element.width Element.fill
+                ]
+                [ navigation
+                , main_ model
+                ]
+        ]
+    }
 
-                    Game _ ->
-                        Html.button [ Evts.onClick SwitchMode ] [ Html.text "Présenter" ]
-                ]
-            , Html.main_
-                [ Attr.css
-                    [ Css.flexGrow <| Css.int 1
-                    , Css.position Css.relative
-                    ]
-                ]
-                [ case model.mode of
-                    Presentation presentation ->
-                        Lib.Slides.view
-                            model.images
-                            presentation
-                            |> Html.fromUnstyled
-                            |> Html.map PresentationMsg
 
-                    Game _ ->
-                        Html.h2 [] [ Html.text "Tic Tac Toe" ]
-                ]
-            ]
+navigation : Element.Element Msg
+navigation =
+    Element.row
+        [ Element.Region.navigation, Element.padding UI.Space.m, Element.spacing UI.Space.m ]
+        [ Element.el [ Element.Region.heading 1, Element.Font.bold ] <| Element.text "Morpion"
+        , Element.link [] { url = Routes.Game |> Routes.toString, label = Element.text "Jouer" }
+        , Element.link [] { url = Routes.Presentation |> Routes.toString, label = Element.text "Présenter" }
+        ]
+
+
+main_ : Model -> Element.Element Msg
+main_ model =
+    Element.el
+        [ Element.Region.mainContent
+        , Element.height Element.fill
+        , Element.width Element.fill
+        ]
+    <|
+        case model.mode of
+            Presentation presentation ->
+                Lib.Slides.view
+                    model.images
+                    presentation
+                    |> Element.html
+                    |> Element.map PresentationMsg
+
+            Game _ ->
+                Element.text "Game"

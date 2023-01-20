@@ -1,6 +1,7 @@
 module Lib.Slides exposing (Background(..), Model, Msg(..), Slide, init, subscriptions, update, view)
 
 import Browser.Events
+import Browser.Navigation
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Font as Font
@@ -8,6 +9,9 @@ import Element.Input
 import Html exposing (Html)
 import Html.Attributes
 import Json.Decode as Decode
+import Lib.Basics exposing (andSubtract)
+import Url
+import Url.Builder
 
 
 
@@ -34,9 +38,19 @@ type alias ImageBackground context =
     }
 
 
-init : List (Slide context Msg) -> Model context
-init slides =
-    { currentSlide = 0, slides = slides, background = Color { r = 0, b = 0, g = 0, a = 0 } }
+init : List (Slide context Msg) -> Url.Url -> Model context
+init slides url =
+    { currentSlide =
+        Url.toString url
+            |> String.split "#"
+            |> List.reverse
+            |> List.head
+            |> Maybe.andThen String.toInt
+            |> Maybe.withDefault 1
+            |> andSubtract 1
+    , slides = slides
+    , background = Color { r = 0, b = 0, g = 0, a = 0 }
+    }
 
 
 type alias Slide context msg =
@@ -57,31 +71,55 @@ type Msg
     | KeyPressed String
 
 
-update : Msg -> Model context -> ( Model context, Cmd Msg )
-update msg model =
+update : Browser.Navigation.Key -> Msg -> Model context -> ( Model context, Cmd Msg )
+update navKey msg model =
     case msg of
         Next ->
-            ( { model | currentSlide = model.currentSlide + 1 |> min (List.length model.slides - 1) }, Cmd.none )
+            nextSlide navKey model
 
         Previous ->
-            ( { model | currentSlide = model.currentSlide - 1 |> max 0 }, Cmd.none )
+            previousSlide navKey model
 
         KeyPressed key ->
             case key of
                 "PageUp" ->
-                    ( { model | currentSlide = model.currentSlide - 1 |> max 0 }, Cmd.none )
+                    previousSlide navKey model
 
                 "ArrowLeft" ->
-                    ( { model | currentSlide = model.currentSlide - 1 |> max 0 }, Cmd.none )
+                    previousSlide navKey model
 
                 "PageDown" ->
-                    ( { model | currentSlide = model.currentSlide + 1 |> min (List.length model.slides - 1) }, Cmd.none )
+                    nextSlide navKey model
 
                 "ArrowRight" ->
-                    ( { model | currentSlide = model.currentSlide + 1 |> min (List.length model.slides - 1) }, Cmd.none )
+                    nextSlide navKey model
 
                 _ ->
                     ( model, Cmd.none )
+
+
+previousSlide : Browser.Navigation.Key -> Model context -> ( Model context, Cmd Msg )
+previousSlide key model =
+    model.currentSlide
+        - 1
+        |> max 0
+        |> changeSlide key model
+
+
+nextSlide : Browser.Navigation.Key -> Model context -> ( Model context, Cmd Msg )
+nextSlide key model =
+    model.currentSlide
+        + 1
+        |> min (List.length model.slides - 1)
+        |> changeSlide key model
+
+
+changeSlide : Browser.Navigation.Key -> Model context -> Int -> ( Model context, Cmd Msg )
+changeSlide key model next =
+    ( { model | currentSlide = next }
+    , Browser.Navigation.pushUrl key <|
+        Url.Builder.relative [ "#" ++ (String.fromInt <| next + 1) ] []
+    )
 
 
 

@@ -8,13 +8,14 @@ import Presentation.Slide4
 import Presentation.Slide5
 import Presentation.Types
 import Types
+import Url
 
 
-init : Lib.Slides.Model Types.Images
-init =
+init : Url.Url -> Lib.Slides.Model Types.Images
+init url =
     let
         model =
-            Lib.Slides.init slides
+            Lib.Slides.init slides url
     in
     { model | background = Lib.Slides.Image { url = .adventureTime, opacity = 0.3 } }
 
