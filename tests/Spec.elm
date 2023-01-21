@@ -1,6 +1,7 @@
 module Spec exposing (suite)
 
 import Expect
+import Lib exposing (test)
 import Test exposing (Test, describe)
 
 
@@ -28,8 +29,3 @@ suite =
     describe "Todo rename"
         [ test "todo rename too" (Expect.equal "Haha" "Haha")
         ]
-
-
-test : String -> Expect.Expectation -> Test
-test name body =
-    Test.test name (\_ -> body)
