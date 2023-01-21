@@ -7,7 +7,8 @@
     "build": "parcel build",
     "start": "parcel",
     "start:dev": "parcel serve",
-    "postinstall": "elm-tooling install"
+    "postinstall": "elm-tooling install",
+    "test": "elm-test-rs"
   },
   "devDependencies": {
     "@parcel/transformer-elm": "2.8.0",
