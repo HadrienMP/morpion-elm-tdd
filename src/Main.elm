@@ -8,7 +8,10 @@ import Element.Background as Background
 import Element.Font as Font
 import Element.Region
 import Lib.Slides
+<<<<<<< HEAD
 import Pages.Game
+=======
+>>>>>>> a76a87c (♻️ move presentation folder to pages folder)
 import Pages.Presentation.Slides
 import Routes
 import Shared
