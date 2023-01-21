@@ -1,15 +1,15 @@
-module Presentation.Slide1 exposing (view)
+module Pages.Presentation.Slide1 exposing (view)
 
 import Element
 import Element.Border as Border
 import Element.Font as Font
 import ElmLogo
-import Presentation.Types
-import Presentation.UI.Space as Space
-import Presentation.UI.Text as Text
+import Pages.Presentation.Types
+import Pages.Presentation.UI.Space as Space
+import Pages.Presentation.UI.Text as Text
 
 
-view : Presentation.Types.Slide msg
+view : Pages.Presentation.Types.Slide msg
 view =
     { content =
         \images ->

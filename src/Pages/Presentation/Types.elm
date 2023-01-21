@@ -1,4 +1,4 @@
-module Presentation.Types exposing (Slide)
+module Pages.Presentation.Types exposing (Slide)
 
 import Lib.Slides
 import Types exposing (Images)

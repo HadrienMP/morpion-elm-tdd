@@ -1,4 +1,4 @@
-module Presentation.UI.Space exposing (l, m, s, xs, xxl)
+module Pages.Presentation.UI.Space exposing (l, m, s, xs, xxl)
 
 import Element
 

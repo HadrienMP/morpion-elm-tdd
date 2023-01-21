@@ -1,4 +1,4 @@
-module Presentation.UI.Sides exposing (Sides, init, withBottom, withTop)
+module Pages.Presentation.UI.Sides exposing (Sides, init, withBottom, withTop)
 
 
 type alias Sides =

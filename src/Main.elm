@@ -7,7 +7,7 @@ import Element.Background
 import Element.Font
 import Element.Region
 import Lib.Slides
-import Presentation.Slides
+import Pages.Presentation.Slides
 import Routes
 import Shared
 import Types exposing (Images)
@@ -77,7 +77,7 @@ initMode url =
             Game ()
 
         Routes.Presentation ->
-            Presentation.Slides.init url |> Presentation
+            Pages.Presentation.Slides.init url |> Presentation
 
 
 

@@ -1,4 +1,4 @@
-module Presentation.UI.Text exposing (l2, m2, s, s2, xl2, xs, xs2, xxl2)
+module Pages.Presentation.UI.Text exposing (l2, m2, s, s2, xl2, xs, xs2, xxl2)
 
 import Element
 import Element.Font as Font

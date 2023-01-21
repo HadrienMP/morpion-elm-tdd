@@ -1,9 +1,9 @@
-module Presentation.UI exposing (hr, ol, ul)
+module Pages.Presentation.UI exposing (hr, ol, ul)
 
 import Element
 import Element.Border as Border
-import Presentation.UI.Space as Space
-import Presentation.UI.Text as Text
+import Pages.Presentation.UI.Space as Space
+import Pages.Presentation.UI.Text as Text
 
 
 hr : Element.Element msg
