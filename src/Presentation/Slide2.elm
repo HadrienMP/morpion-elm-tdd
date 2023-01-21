@@ -71,12 +71,15 @@ profile it =
             [ Text.xs2 [ Font.bold, Element.centerX ] it.title1
             , Text.xs2 [ Element.centerX ] it.title2
             ]
-        , Element.column [ Element.centerX, Element.spacing Space.xs ]
-            [ Element.newTabLink []
+        , Element.column
+            [ Element.centerX
+            , Element.spacing Space.xs
+            ]
+            [ Element.newTabLink [ Element.centerX ]
                 { url = "https://twitter.com/" ++ it.twitter
                 , label = Text.xs <| "🐦 @" ++ it.twitter
                 }
-            , Element.newTabLink []
+            , Element.newTabLink [ Element.centerX ]
                 { url = "https://" ++ it.website
                 , label = Text.xs <| "🌐 " ++ it.website
                 }

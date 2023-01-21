@@ -8,6 +8,7 @@ import Presentation.Slide4
 import Presentation.Slide5
 import Presentation.Types
 import Types
+import UI.Colors
 import Url
 
 
@@ -17,7 +18,10 @@ init url =
         model =
             Lib.Slides.init slides url
     in
-    { model | background = Lib.Slides.Image { url = .adventureTime, opacity = 0.3 } }
+    { model
+        | background = Lib.Slides.Image { url = .adventureTime, opacity = 0.3 }
+        , accent = UI.Colors.accent
+    }
 
 
 slides : List (Presentation.Types.Slide msg)

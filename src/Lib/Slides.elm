@@ -24,6 +24,7 @@ type alias Model context =
     { currentSlide : Int
     , slides : List (Slide context Msg)
     , background : Background context
+    , accent : Element.Color
     }
 
 
@@ -50,6 +51,7 @@ init slides url =
             |> andSubtract 1
     , slides = slides
     , background = Color { r = 0, b = 0, g = 0, a = 0 }
+    , accent = Element.rgb255 0 112 255
     }
 
 
@@ -164,7 +166,7 @@ view context model =
                 [ Element.row
                     [ Font.size 40
                     , Font.light
-                    , Font.color actionColor
+                    , Font.color <| actionColor model
                     , Element.alignRight
                     , Element.spacing 10
                     , Element.padding 20
@@ -219,14 +221,14 @@ progressBar model =
                     )
                     ++ "%"
         , Element.htmlAttribute <| Html.Attributes.style "transition" "width 1s"
-        , Background.color <| actionColor
+        , Background.color <| actionColor model
         ]
         Element.none
 
 
-actionColor : Element.Color
-actionColor =
-    Element.rgb255 0 112 255
+actionColor : Model context -> Element.Color
+actionColor model =
+    model.accent
 
 
 progress : { currentSlide : Int, totalSlides : Int } -> Int

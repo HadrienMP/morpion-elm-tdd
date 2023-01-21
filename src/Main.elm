@@ -100,7 +100,15 @@ update msg model =
                     (Cmd.map <| PresentationMsg)
 
         ( SharedMsg subMsg, _ ) ->
-            Shared.update subMsg model.shared |> Tuple.mapBoth (\next -> { model | shared = next, mode = initMode next.url }) (Cmd.map SharedMsg)
+            Shared.update subMsg model.shared
+                |> Tuple.mapBoth
+                    (\next ->
+                        { model
+                            | shared = next
+                            , mode = initMode next.url
+                        }
+                    )
+                    (Cmd.map SharedMsg)
 
         _ ->
             ( model, Cmd.none )
@@ -158,8 +166,14 @@ navigation =
     Element.row
         [ Element.Region.navigation, Element.padding UI.Space.m, Element.spacing UI.Space.m ]
         [ Element.el [ Element.Region.heading 1, Element.Font.bold ] <| Element.text "Morpion"
-        , Element.link [] { url = Routes.Game |> Routes.toString, label = Element.text "Jouer" }
-        , Element.link [] { url = Routes.Presentation |> Routes.toString, label = Element.text "Présenter" }
+        , Element.link
+            [ Element.Font.color UI.Colors.accent
+            ]
+            { url = Routes.Game |> Routes.toString, label = Element.text "Jouer" }
+        , Element.link
+            [ Element.Font.color UI.Colors.accent
+            ]
+            { url = Routes.Presentation |> Routes.toString, label = Element.text "Présenter" }
         ]
 
 
