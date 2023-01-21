@@ -19,7 +19,7 @@ view =
                     , Element.column [ Element.spacing Space.s ]
                         [ Text.l2 [ Font.bold ] "Elm"
                         , UI.ul []
-                            [ "Evan Czapliki : 2012"
+                            [ "Evan Czaplicki : 2012"
                             , "Frontend"
                             , "Fonctionnel"
                             , "Minimaliste"
