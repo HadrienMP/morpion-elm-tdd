@@ -70,6 +70,10 @@ config =
                 , ( "Html.Styled", "Html" )
                 , ( "Html.Styled.Attributes", "Attr" )
                 , ( "Html.Styled.Events", "Evts" )
+                , ( "Domain.Grid", "Grid" )
+                , ( "Domain.Player", "Player" )
+                , ( "Domain.Position", "Position" )
+                , ( "Domain.Main", "Domain" )
                 ]
                 |> NoInconsistentAliases.noMissingAliases
                 |> NoInconsistentAliases.rule

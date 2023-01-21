@@ -1,8 +1,8 @@
 module Shared exposing (Msg(..), Shared, update)
 
-import Browser
 import Browser.Navigation exposing (Key)
 import Url exposing (Url)
+import Browser
 
 
 
