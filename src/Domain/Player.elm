@@ -1,4 +1,4 @@
-module Domain.Player exposing (Player(..), all, next)
+module Domain.Player exposing (Player(..), all, next, toString)
 
 
 type Player
@@ -32,3 +32,13 @@ next_ list =
 
         O :: _ ->
             list
+
+
+toString : Player -> String
+toString player =
+    case player of
+        X ->
+            "X"
+
+        O ->
+            "O"

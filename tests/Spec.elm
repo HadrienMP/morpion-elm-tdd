@@ -1,8 +1,9 @@
 module Spec exposing (suite)
 
+import Domain.Decision exposing (..)
 import Domain.Grid as Grid
-import Domain.Main as Domain exposing (..)
 import Domain.Player exposing (Player(..))
+import Domain.TicTacToe as Domain exposing (..)
 import Expect
 import Lib exposing (test)
 import Test exposing (Test, describe)
@@ -103,6 +104,25 @@ suite =
                         |> decide
                         |> Expect.equal (Win X)
                     )
+                , test "not right away"
+                    -- y
+                    -----|------------
+                    -- 2 | X |   |
+                    -- 1 | X | X | O
+                    -- 0 | X | O | O
+                    -----|------------
+                    -- x | 0 | 1 | 2
+                    (Grid.empty
+                        |> Grid.play X ( 1, 1 )
+                        |> Grid.play O ( 2, 0 )
+                        |> Grid.play X ( 0, 1 )
+                        |> Grid.play O ( 2, 1 )
+                        |> Grid.play X ( 0, 0 )
+                        |> Grid.play O ( 1, 0 )
+                        |> Grid.play X ( 0, 2 )
+                        |> decide
+                        |> Expect.equal (Win X)
+                    )
                 ]
             , describe "X wins on column"
                 [ test "first"
@@ -185,6 +205,37 @@ suite =
                         |> Grid.play X ( 1, 1 )
                         |> Grid.play O ( 1, 0 )
                         |> Grid.play X ( 0, 0 )
+                        |> decide
+                        |> Expect.equal (Win X)
+                    )
+                , test "from the middle"
+                    -- y
+                    -----|------------
+                    -- 2 |   |   | X
+                    -- 1 |   | X |
+                    -- 0 | X | O | O
+                    -----|------------
+                    -- x | 0 | 1 | 2
+                    (Grid.empty
+                        |> Grid.play X ( 1, 1 )
+                        |> Grid.play O ( 0, 0 )
+                        |> Grid.play X ( 2, 2 )
+                        |> Grid.play O ( 1, 0 )
+                        |> Grid.play X ( 0, 0 )
+                        |> decide
+                        |> Expect.equal (Win X)
+                    )
+                , test "on the last move"
+                    (Grid.empty
+                        |> Grid.play X ( 1, 1 )
+                        |> Grid.play O ( 0, 1 )
+                        |> Grid.play X ( 0, 0 )
+                        |> Grid.play O ( 2, 2 )
+                        |> Grid.play X ( 1, 2 )
+                        |> Grid.play O ( 1, 0 )
+                        |> Grid.play X ( 2, 0 )
+                        |> Grid.play O ( 2, 1 )
+                        |> Grid.play X ( 0, 2 )
                         |> decide
                         |> Expect.equal (Win X)
                     )

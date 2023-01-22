@@ -1,4 +1,4 @@
-module Main exposing (Flags, ModeModel(..), Model, Msg(..), PlayModel, main)
+module Main exposing (Flags, ModeModel(..), Model, Msg(..), main)
 
 import Browser
 import Browser.Events
@@ -8,10 +8,7 @@ import Element.Background as Background
 import Element.Font as Font
 import Element.Region
 import Lib.Slides
-<<<<<<< HEAD
 import Pages.Game
-=======
->>>>>>> a76a87c (♻️ move presentation folder to pages folder)
 import Pages.Presentation.Slides
 import Routes
 import Shared
@@ -47,12 +44,8 @@ main =
 -- MODEL
 
 
-type alias PlayModel =
-    ()
-
-
 type ModeModel
-    = Game PlayModel
+    = Game Pages.Game.Model
     | Presentation (Lib.Slides.Model Images)
 
 
@@ -82,7 +75,7 @@ initMode : Url.Url -> ModeModel
 initMode url =
     case Routes.parse url of
         Routes.Game ->
-            Game ()
+            Game <| Pages.Game.init
 
         Routes.Presentation ->
             Pages.Presentation.Slides.init url |> Presentation
@@ -107,6 +100,12 @@ update msg model =
                 |> Tuple.mapBoth
                     (\updated -> { model | mode = Presentation updated })
                     (Cmd.map <| PresentationMsg)
+
+        ( GameMsg subMsg, Game subModel ) ->
+            Pages.Game.update subMsg subModel
+                |> Tuple.mapBoth
+                    (\updated -> { model | mode = Game updated })
+                    (Cmd.map <| GameMsg)
 
         ( SharedMsg subMsg, _ ) ->
             Shared.update subMsg model.shared
@@ -210,8 +209,8 @@ mainContent model =
                     |> Element.html
                     |> Element.map PresentationMsg
 
-            Game _ ->
-                Pages.Game.view (mainContentSize model.windowSize) ()
+            Game game ->
+                Pages.Game.view game
                     |> Element.map GameMsg
 
 
