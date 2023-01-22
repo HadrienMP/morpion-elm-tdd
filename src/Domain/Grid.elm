@@ -1,4 +1,4 @@
-module Domain.Grid exposing (Grid, Move, columns, diagonals, empty, isFull, play, rows)
+module Domain.Grid exposing (Grid, Move, columns, diagonals, empty, findMoveAt, isFull, play, rows)
 
 import Domain.Player exposing (Player)
 import Domain.Position exposing (Position)
@@ -54,3 +54,10 @@ diagonals =
     [ List.range 0 2 |> List.map (\a -> { x = a, y = a })
     , List.range 0 2 |> List.map (\a -> { x = a, y = a - 2 |> abs })
     ]
+
+
+findMoveAt : Position -> Grid -> Maybe Move
+findMoveAt position grid =
+    grid
+        |> List.filter (\move -> move.position == position)
+        |> List.head

@@ -3,6 +3,7 @@ module Main exposing (Flags, ModeModel(..), Model, Msg(..), main)
 import Browser
 import Browser.Events
 import Browser.Navigation
+import Domain.Decision exposing (Decision(..))
 import Element
 import Element.Background as Background
 import Element.Font as Font
@@ -210,7 +211,11 @@ mainContent model =
                     |> Element.map PresentationMsg
 
             Game game ->
-                Pages.Game.view game
+                Pages.Game.view
+                    { width = model.windowSize.width
+                    , height = model.windowSize.height - 100
+                    }
+                    game
                     |> Element.map GameMsg
 
 

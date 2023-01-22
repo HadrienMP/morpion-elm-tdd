@@ -5,10 +5,13 @@ import Domain.Grid as Grid
 import Domain.Player as Player
 import Domain.Position as Position
 import Domain.TicTacToe
-import Element exposing (Element)
+import Element exposing (Element, htmlAttribute)
 import Element.Border as Border
 import Element.Font as Font
 import Element.Input as Input
+import Html
+import Html.Attributes
+import Types exposing (Size)
 import UI.Space
 
 
@@ -55,34 +58,44 @@ update msg model =
 -- View
 
 
-view : Model -> Element Msg
-view model =
+view : Size -> Model -> Element Msg
+view availableSize model =
     Element.column
         [ Element.centerX
         , Element.centerY
         , Element.spacing UI.Space.m
         ]
-        [ displayDecision model
-        , displayGrid model
+        [ displayDecision availableSize model
+        , displayGrid availableSize model
         ]
 
 
-displayDecision : Model -> Element Msg
-displayDecision model =
-    Element.text <|
-        case model.lastDecision of
-            Domain.Decision.Next player ->
-                Player.toString player ++ " is next"
+displayDecision : Size -> Model -> Element Msg
+displayDecision availableSize model =
+    Element.el [ Font.size <| minDimension availableSize // 9 ] <|
+        Element.text <|
+            case model.lastDecision of
+                Domain.Decision.Next player ->
+                    Player.toString player ++ " is next"
 
-            Domain.Decision.Win player ->
-                Player.toString player ++ " wins !"
+                Domain.Decision.Win player ->
+                    Player.toString player ++ " wins !"
 
-            Domain.Decision.Draw ->
-                "It's a draw !"
+                Domain.Decision.Draw ->
+                    "It's a draw !"
 
 
-displayGrid : Model -> Element Msg
-displayGrid model =
+minDimension : Size -> Int
+minDimension size =
+    min size.width size.height
+
+
+displayGrid : Size -> Model -> Element Msg
+displayGrid availableSize model =
+    let
+        cellSize =
+            minDimension availableSize // 5
+    in
     Element.column
         [ Element.centerX
         , Element.centerY
@@ -96,16 +109,25 @@ displayGrid model =
                             |> List.map
                                 (\position ->
                                     Input.button
-                                        [ Element.width <| Element.px 80
-                                        , Element.height <| Element.px 80
+                                        [ Element.width <| Element.px <| cellSize
+                                        , Element.height <| Element.px <| cellSize
                                         , Border.width 1
-                                        , Font.center
                                         ]
                                         { onPress = Just <| PlayAt position
                                         , label =
-                                            case model.grid |> List.filter (\move -> move.position == position) |> List.head of
+                                            case
+                                                Grid.findMoveAt position model.grid
+                                            of
                                                 Just { player } ->
-                                                    Element.text <| Player.toString player
+                                                    Element.el
+                                                        [ Font.size <| cellSize - 10
+                                                        , Element.centerX
+                                                        , Element.centerY
+                                                        , htmlAttribute <| Html.Attributes.style "transform" "translateY(10%)"
+                                                        ]
+                                                    <|
+                                                        Element.text <|
+                                                            Player.toString player
 
                                                 Nothing ->
                                                     Element.none
