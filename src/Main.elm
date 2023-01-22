@@ -1,6 +1,7 @@
 module Main exposing (Flags, ModeModel(..), Model, Msg(..), PlayModel, main)
 
 import Browser
+import Browser.Events
 import Browser.Navigation
 import Element
 import Element.Background as Background
@@ -22,6 +23,7 @@ import Url
 
 type alias Flags =
     { images : Images
+    , windowSize : Types.Size
     }
 
 
@@ -52,6 +54,7 @@ type ModeModel
 
 type alias Model =
     { images : Images
+    , windowSize : Types.Size
     , mode : ModeModel
     , shared : Shared.Shared
     }
@@ -61,6 +64,7 @@ init : Flags -> Url.Url -> Browser.Navigation.Key -> ( Model, Cmd Msg )
 init flags url key =
     ( { mode = initMode url
       , images = flags.images
+      , windowSize = flags.windowSize
       , shared =
             { url = url
             , key = key
@@ -86,8 +90,8 @@ initMode url =
 
 type Msg
     = PresentationMsg Lib.Slides.Msg
-    | SwitchMode
     | SharedMsg Shared.Msg
+    | Resized Types.Size
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -110,6 +114,9 @@ update msg model =
                     )
                     (Cmd.map SharedMsg)
 
+        ( Resized newSize, _ ) ->
+            ( { model | windowSize = newSize }, Cmd.none )
+
         _ ->
             ( model, Cmd.none )
 
@@ -120,13 +127,16 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    case model.mode of
-        Presentation presentation ->
-            Lib.Slides.subscriptions presentation
-                |> Sub.map PresentationMsg
+    Sub.batch
+        [ Browser.Events.onResize (\width height -> Resized { width = width, height = height })
+        , case model.mode of
+            Presentation presentation ->
+                Lib.Slides.subscriptions presentation
+                    |> Sub.map PresentationMsg
 
-        _ ->
-            Sub.none
+            _ ->
+                Sub.none
+        ]
 
 
 
@@ -155,7 +165,7 @@ view model =
                 , Element.width Element.fill
                 ]
                 [ navigation
-                , main_ model
+                , mainContent model
                 ]
         ]
     }
@@ -177,17 +187,21 @@ navigation =
         ]
 
 
-main_ : Model -> Element.Element Msg
-main_ model =
+mainContent : Model -> Element.Element Msg
+mainContent model =
     Element.el
         [ Element.Region.mainContent
         , Element.height Element.fill
         , Element.width Element.fill
+        , Element.clip
         ]
     <|
         case model.mode of
             Presentation presentation ->
                 Lib.Slides.view
+                    { width = model.windowSize.width
+                    , height = model.windowSize.height - 68
+                    }
                     model.images
                     presentation
                     |> Element.html

@@ -16,6 +16,10 @@
             .Main
             .init({
                 node: document.getElementById("root"), flags: {
+                    windowSize: {
+                        width: window.innerWidth,
+                        height: window.innerHeight
+                    },
                     images: {
                         hadrien: new URL(
                             '../public/img/hadrien.png',

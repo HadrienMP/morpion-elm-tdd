@@ -1,4 +1,4 @@
-module Lib.Slides exposing (Background(..), ImageBackground, Model, Msg(..), Slide, init, subscriptions, update, view)
+module Lib.Slides exposing (Background(..), ImageBackground, Model, Msg(..), Size, Slide, init, subscriptions, update, view)
 
 import Browser.Events
 import Browser.Navigation
@@ -144,8 +144,12 @@ subscriptions _ =
 --
 
 
-view : context -> Model context -> Html Msg
-view context model =
+type alias Size =
+    { width : Int, height : Int }
+
+
+view : Size -> context -> Model context -> Html Msg
+view size context model =
     Element.layoutWith
         { options =
             [ Element.focusStyle
@@ -185,22 +189,23 @@ view context model =
         ]
     <|
         Element.row
-            [ Element.height Element.fill
-            , Element.htmlAttribute <|
-                Html.Attributes.style "width" <|
-                    String.fromInt (List.length model.slides * 100)
-                        ++ "vw"
+            [ Element.height <| Element.px <| size.height
+            , Element.width <| Element.px <| List.length model.slides * size.width
             , Element.htmlAttribute <|
                 Html.Attributes.style "margin-left" <|
-                    String.fromInt (-100 * model.currentSlide)
-                        ++ "vw"
-            , Element.htmlAttribute <| Html.Attributes.style "transition" "margin-left 0.5s cubic-bezier(0.86, 0, 0.07, 1) 0s"
+                    String.fromInt (model.currentSlide * -size.width)
+                        ++ "px"
+            , Element.htmlAttribute <|
+                Html.Attributes.style
+                    "transition"
+                    "margin-left 0.5s cubic-bezier(0.86, 0, 0.07, 1) 0s"
             ]
             (model.slides
                 |> List.indexedMap Tuple.pair
                 |> List.map
                     (slide
                         { context = context
+                        , size = size
                         , totalSlides = List.length model.slides
                         }
                     )
@@ -240,10 +245,13 @@ progress { currentSlide, totalSlides } =
 
 
 slide :
-    { context : context, totalSlides : Int }
+    { context : context
+    , size : Size
+    , totalSlides : Int
+    }
     -> ( Int, Slide context msg )
     -> Element msg
-slide { context, totalSlides } ( index, { content, background } ) =
+slide { context, size, totalSlides } ( index, { content, background } ) =
     Element.el
         [ Element.inFront <| Element.row [] []
         , Element.height Element.fill
@@ -253,30 +261,26 @@ slide { context, totalSlides } ( index, { content, background } ) =
                 "0 0 "
                     ++ String.fromInt (100 // totalSlides)
                     ++ "%"
+        , background
+            |> Maybe.map (displayBackground context)
+            |> Maybe.withDefault Element.none
+            |> Element.behindContent
         ]
     <|
         Element.el
-            [ Element.behindContent <| transparentBackground background context
-            , Element.width Element.fill
-            , Element.height Element.fill
+            [ Element.width <| Element.px 920
+            , Element.height <| Element.px 700
+            , Element.scale (min (toFloat size.width / 920) (toFloat size.height / 700))
+            , Element.htmlAttribute <|
+                Html.Attributes.style
+                    "transform-origin"
+                    "top"
+            , Element.centerX
+            , Element.centerY
+            , Element.padding 20
             ]
         <|
-            Element.el
-                [ Element.width <| Element.maximum 920 <| Element.fill
-                , Element.height <| Element.maximum 700 <| Element.fill
-                , Element.centerX
-                , Element.centerY
-                , Element.padding 20
-                ]
-            <|
-                content context
-
-
-transparentBackground : Maybe (Background context) -> context -> Element msg
-transparentBackground background context =
-    background
-        |> Maybe.map (displayBackground context)
-        |> Maybe.withDefault Element.none
+            content context
 
 
 displayBackground : context -> Background context -> Element msg

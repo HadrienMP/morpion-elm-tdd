@@ -1,4 +1,4 @@
-module Types exposing (Images)
+module Types exposing (Images, Size)
 
 
 type alias Images =
@@ -10,3 +10,7 @@ type alias Images =
     , tdd : String
     , disclaimer : String
     }
+
+
+type alias Size =
+    { width : Int, height : Int }
