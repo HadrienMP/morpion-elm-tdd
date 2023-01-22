@@ -6,8 +6,10 @@ import Element.Font as Font
 import Pages.Presentation.UI.Sides as Sides
 import Pages.Presentation.UI.Space as Space
 import Pages.Presentation.UI.Text as Text
+import Types exposing (Images)
 
 
+view : { content : Images -> Element.Element msg, background : Maybe b }
 view =
     { content =
         \images ->

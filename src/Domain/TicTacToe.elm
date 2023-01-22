@@ -1,9 +1,9 @@
-module Domain.TicTacToe exposing (..)
+module Domain.TicTacToe exposing (decide)
 
 import Domain.Decision as Decision exposing (Decision(..))
 import Domain.Grid as Grid exposing (Grid)
 import Domain.Player as Player exposing (Player(..))
-import Domain.Position as Position exposing (..)
+import Domain.Position as Position
 import Lib.List
 
 

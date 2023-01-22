@@ -1,4 +1,4 @@
-module Domain.Position exposing (..)
+module Domain.Position exposing (Position, toString)
 
 
 type alias Position =

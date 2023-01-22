@@ -18,17 +18,17 @@ next player =
 
 all : List Player
 all =
-    next_ [] |> List.reverse
+    nextInAll [] |> List.reverse
 
 
-next_ : List Player -> List Player
-next_ list =
+nextInAll : List Player -> List Player
+nextInAll list =
     case list of
         [] ->
-            next_ (X :: list)
+            nextInAll (X :: list)
 
         X :: _ ->
-            next_ (O :: list)
+            nextInAll (O :: list)
 
         O :: _ ->
             list

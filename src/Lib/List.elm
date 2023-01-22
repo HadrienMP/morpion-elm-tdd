@@ -1,4 +1,4 @@
-module Lib.List exposing (..)
+module Lib.List exposing (isContainedIn)
 
 
 isContainedIn : List a -> List a -> Bool

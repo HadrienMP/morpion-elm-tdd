@@ -251,7 +251,7 @@ slide :
     }
     -> ( Int, Slide context msg )
     -> Element msg
-slide { context, size, totalSlides } ( index, { content, background } ) =
+slide { context, size, totalSlides } ( _, { content, background } ) =
     Element.el
         [ Element.inFront <| Element.row [] []
         , Element.height Element.fill

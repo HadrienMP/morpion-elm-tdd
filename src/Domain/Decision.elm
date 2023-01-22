@@ -1,4 +1,4 @@
-module Domain.Decision exposing (..)
+module Domain.Decision exposing (Analysis(..), Decision(..), start, try, withDefault)
 
 import Domain.Grid exposing (Grid)
 import Domain.Player exposing (Player)

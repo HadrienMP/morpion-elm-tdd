@@ -1,15 +1,14 @@
-module Pages.Game exposing (..)
+module Pages.Game exposing (Model, Msg(..), init, update, view)
 
 import Domain.Decision
-import Domain.Grid
+import Domain.Grid as Grid
 import Domain.Player as Player
-import Domain.Position
+import Domain.Position as Position
 import Domain.TicTacToe
 import Element exposing (Element)
-import Element.Border
-import Element.Font
-import Element.Input
-import Types exposing (Size)
+import Element.Border as Border
+import Element.Font as Font
+import Element.Input as Input
 import UI.Space
 
 
@@ -18,15 +17,15 @@ import UI.Space
 
 
 type alias Model =
-    { grid : Domain.Grid.Grid
+    { grid : Grid.Grid
     , lastDecision : Domain.Decision.Decision
     }
 
 
 init : Model
 init =
-    { grid = Domain.Grid.empty
-    , lastDecision = Domain.TicTacToe.decide Domain.Grid.empty
+    { grid = Grid.empty
+    , lastDecision = Domain.TicTacToe.decide Grid.empty
     }
 
 
@@ -35,7 +34,7 @@ init =
 
 
 type Msg
-    = PlayAt Domain.Position.Position
+    = PlayAt Position.Position
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -44,7 +43,7 @@ update msg model =
         ( PlayAt position, Domain.Decision.Next player ) ->
             let
                 next =
-                    Domain.Grid.play player ( position.x, position.y ) model.grid
+                    Grid.play player ( position.x, position.y ) model.grid
             in
             ( { grid = next, lastDecision = Domain.TicTacToe.decide next }, Cmd.none )
 
@@ -88,7 +87,7 @@ displayGrid model =
         [ Element.centerX
         , Element.centerY
         ]
-        (Domain.Grid.rows
+        (Grid.rows
             |> List.reverse
             |> List.map
                 (\row ->
@@ -96,11 +95,11 @@ displayGrid model =
                         (row
                             |> List.map
                                 (\position ->
-                                    Element.Input.button
+                                    Input.button
                                         [ Element.width <| Element.px 80
                                         , Element.height <| Element.px 80
-                                        , Element.Border.width 1
-                                        , Element.Font.center
+                                        , Border.width 1
+                                        , Font.center
                                         ]
                                         { onPress = Just <| PlayAt position
                                         , label =

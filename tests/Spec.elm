@@ -3,7 +3,7 @@ module Spec exposing (suite)
 import Domain.Decision exposing (..)
 import Domain.Grid as Grid
 import Domain.Player exposing (Player(..))
-import Domain.TicTacToe as Domain exposing (..)
+import Domain.TicTacToe exposing (..)
 import Expect
 import Lib exposing (test)
 import Test exposing (Test, describe)

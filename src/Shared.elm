@@ -1,8 +1,8 @@
 module Shared exposing (Msg(..), Shared, update)
 
+import Browser
 import Browser.Navigation exposing (Key)
 import Url exposing (Url)
-import Browser
 
 
 
@@ -21,7 +21,7 @@ type alias Shared =
 
 type Msg
     = LinkClicked Browser.UrlRequest
-    | UrlChanged Url.Url
+    | UrlChanged Url
 
 
 update : Msg -> Shared -> ( Shared, Cmd Msg )

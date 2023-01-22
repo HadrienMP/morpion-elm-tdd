@@ -1,7 +1,7 @@
 module Domain.Grid exposing (Grid, Move, columns, diagonals, empty, isFull, play, rows)
 
 import Domain.Player exposing (Player)
-import Domain.Position as Position exposing (Position)
+import Domain.Position exposing (Position)
 
 
 type alias Grid =
@@ -10,7 +10,7 @@ type alias Grid =
 
 type alias Move =
     { player : Player
-    , position : Position.Position
+    , position : Position
     }
 
 
