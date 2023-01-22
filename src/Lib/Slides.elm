@@ -268,19 +268,31 @@ slide { context, size, totalSlides } ( index, { content, background } ) =
         ]
     <|
         Element.el
-            [ Element.width <| Element.px 920
-            , Element.height <| Element.px 700
-            , Element.scale (min (toFloat size.width / 920) (toFloat size.height / 700))
+            [ Element.width <| Element.px slideSize.width
+            , Element.height <| Element.px slideSize.height
+            , Element.scale <| scaleFactor size
             , Element.htmlAttribute <|
                 Html.Attributes.style
                     "transform-origin"
                     "top"
+            , Element.padding 20
             , Element.centerX
             , Element.centerY
-            , Element.padding 20
             ]
         <|
             content context
+
+
+slideSize : Size
+slideSize =
+    { width = 920, height = 700 }
+
+
+scaleFactor : Size -> Float
+scaleFactor size =
+    (toFloat size.width / toFloat slideSize.width)
+        |> min (toFloat size.height / toFloat slideSize.height)
+        |> min 1
 
 
 displayBackground : context -> Background context -> Element msg
