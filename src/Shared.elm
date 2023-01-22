@@ -1,4 +1,4 @@
-module Shared exposing (..)
+module Shared exposing (Msg(..), Shared, update)
 
 import Browser
 import Browser.Navigation exposing (Key)

@@ -1,4 +1,4 @@
-module UI.Space exposing (l, m, s, xs, xxl)
+module UI.Space exposing (l, m, s, xs)
 
 import Element
 

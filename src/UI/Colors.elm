@@ -1,4 +1,4 @@
-module UI.Colors exposing (..)
+module UI.Colors exposing (accent, background, onBackground)
 
 import Color
 import Element

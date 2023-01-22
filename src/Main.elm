@@ -3,8 +3,8 @@ module Main exposing (Flags, ModeModel(..), Model, Msg(..), PlayModel, main)
 import Browser
 import Browser.Navigation
 import Element
-import Element.Background
-import Element.Font
+import Element.Background as Background
+import Element.Font as Font
 import Element.Region
 import Lib.Slides
 import Pages.Presentation.Slides
@@ -146,8 +146,8 @@ view model =
                     }
                 ]
             }
-            [ Element.Background.color UI.Colors.background
-            , Element.Font.color UI.Colors.onBackground
+            [ Background.color UI.Colors.background
+            , Font.color UI.Colors.onBackground
             ]
           <|
             Element.column
@@ -165,13 +165,13 @@ navigation : Element.Element Msg
 navigation =
     Element.row
         [ Element.Region.navigation, Element.padding UI.Space.m, Element.spacing UI.Space.m ]
-        [ Element.el [ Element.Region.heading 1, Element.Font.bold ] <| Element.text "Morpion"
+        [ Element.el [ Element.Region.heading 1, Font.bold ] <| Element.text "Morpion"
         , Element.link
-            [ Element.Font.color UI.Colors.accent
+            [ Font.color UI.Colors.accent
             ]
             { url = Routes.Game |> Routes.toString, label = Element.text "Jouer" }
         , Element.link
-            [ Element.Font.color UI.Colors.accent
+            [ Font.color UI.Colors.accent
             ]
             { url = Routes.Presentation |> Routes.toString, label = Element.text "Présenter" }
         ]

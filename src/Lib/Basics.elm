@@ -1,4 +1,4 @@
-module Lib.Basics exposing (..)
+module Lib.Basics exposing (andSubtract)
 
 
 andSubtract : Int -> Int -> Int

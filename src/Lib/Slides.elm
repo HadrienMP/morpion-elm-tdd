@@ -1,11 +1,11 @@
-module Lib.Slides exposing (Background(..), Model, Msg(..), Slide, init, subscriptions, update, view)
+module Lib.Slides exposing (Background(..), ImageBackground, Model, Msg(..), Slide, init, subscriptions, update, view)
 
 import Browser.Events
 import Browser.Navigation
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Font as Font
-import Element.Input
+import Element.Input as Input
 import Html exposing (Html)
 import Html.Attributes
 import Json.Decode as Decode
@@ -171,11 +171,11 @@ view context model =
                     , Element.spacing 10
                     , Element.padding 20
                     ]
-                    [ Element.Input.button []
+                    [ Input.button []
                         { onPress = Just Previous
                         , label = Element.text "<"
                         }
-                    , Element.Input.button []
+                    , Input.button []
                         { onPress = Just Next
                         , label = Element.text ">"
                         }
