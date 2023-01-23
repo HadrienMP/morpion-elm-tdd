@@ -8,6 +8,7 @@ import Element.Background as Background
 import Element.Font as Font
 import Element.Region
 import Lib.Slides
+import Pages.Game
 import Pages.Presentation.Slides
 import Routes
 import Shared
@@ -90,6 +91,7 @@ initMode url =
 
 type Msg
     = PresentationMsg Lib.Slides.Msg
+    | GameMsg Pages.Game.Msg
     | SharedMsg Shared.Msg
     | Resized Types.Size
 
@@ -199,13 +201,19 @@ mainContent model =
         case model.mode of
             Presentation presentation ->
                 Lib.Slides.view
-                    { width = model.windowSize.width
-                    , height = model.windowSize.height - 68
-                    }
+                    (mainContentSize model.windowSize)
                     model.images
                     presentation
                     |> Element.html
                     |> Element.map PresentationMsg
 
             Game _ ->
-                Element.text "Game"
+                Pages.Game.view (mainContentSize model.windowSize) ()
+                    |> Element.map GameMsg
+
+
+mainContentSize : Types.Size -> Types.Size
+mainContentSize windowSize =
+    { width = windowSize.width
+    , height = windowSize.height - 68
+    }
