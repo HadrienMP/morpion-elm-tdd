@@ -22,16 +22,12 @@ import UI.Space
 
 
 type alias Model =
-    { grid : Grid.Grid
-    , lastDecision : Domain.Decision.Decision
-    }
+    Domain.TicTacToe.TicTacToe
 
 
 init : Model
 init =
-    { grid = Grid.empty
-    , lastDecision = Domain.TicTacToe.decide Grid.empty
-    }
+    Domain.TicTacToe.start
 
 
 
@@ -47,11 +43,11 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case ( msg, model.lastDecision ) of
         ( PlayAt position, Domain.Decision.Next player ) ->
-            let
-                next =
-                    Grid.play player ( position.x, position.y ) model.grid
-            in
-            ( { grid = next, lastDecision = Domain.TicTacToe.decide next }, Cmd.none )
+            ( Domain.TicTacToe.play
+                { player = player, position = position }
+                model
+            , Cmd.none
+            )
 
         ( Restart, _ ) ->
             ( init, Cmd.none )

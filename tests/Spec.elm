@@ -1,9 +1,8 @@
 module Spec exposing (suite)
 
 import Domain.Decision exposing (Decision(..))
-import Domain.Grid as Grid
 import Domain.Player exposing (Player(..))
-import Domain.TicTacToe exposing (decide)
+import Domain.TicTacToe as TicTacToe
 import Expect
 import Lib exposing (test)
 import Test exposing (Test, describe)
@@ -30,22 +29,31 @@ import Test exposing (Test, describe)
 ------------------------------------------------------------------------
 
 
+play : Player -> ( Int, Int ) -> TicTacToe.TicTacToe -> TicTacToe.TicTacToe
+play player ( x, y ) ticTacToe =
+    TicTacToe.play { player = player, position = { x = x, y = y } } ticTacToe
+
+
 suite : Test
 suite =
     describe "Tic Tac Toe"
         [ describe "Basics"
-            [ test "X plays first" (decide Grid.empty |> Expect.equal (Next X))
+            [ test "X plays first"
+                (TicTacToe.start
+                    |> .lastDecision
+                    |> Expect.equal (Next X)
+                )
             , describe "O plays second"
                 [ test "X plays in the middle"
-                    (Grid.empty
-                        |> Grid.play X ( 1, 1 )
-                        |> decide
+                    (TicTacToe.start
+                        |> play X ( 1, 1 )
+                        |> .lastDecision
                         |> Expect.equal (Next O)
                     )
                 , test "X plays somewhere else"
-                    (Grid.empty
-                        |> Grid.play X ( 0, 0 )
-                        |> decide
+                    (TicTacToe.start
+                        |> play X ( 0, 0 )
+                        |> .lastDecision
                         |> Expect.equal (Next O)
                     )
                 ]
@@ -53,56 +61,56 @@ suite =
                 --        | X(1,2) |
                 -- O(0,1) | O(1,1) |
                 -- X(0,0) | X(1,0) |
-                (Grid.empty
-                    |> Grid.play X ( 0, 0 )
-                    |> Grid.play O ( 0, 1 )
-                    |> Grid.play X ( 1, 0 )
-                    |> Grid.play O ( 1, 1 )
-                    |> Grid.play X ( 1, 2 )
-                    |> decide
+                (TicTacToe.start
+                    |> play X ( 0, 0 )
+                    |> play O ( 0, 1 )
+                    |> play X ( 1, 0 )
+                    |> play O ( 1, 1 )
+                    |> play X ( 1, 2 )
+                    |> .lastDecision
                     |> Expect.equal (Next O)
                 )
             , test "attempts to play when it's not your turn are ignored"
                 (let
                     before =
-                        Grid.empty
-                            |> Grid.play X ( 0, 0 )
+                        TicTacToe.start
+                            |> play X ( 0, 0 )
                  in
                  before
-                    |> Grid.play X ( 1, 0 )
+                    |> play X ( 1, 0 )
                     |> Expect.equal before
                 )
             , test "attempts to override a move are ignored"
                 (let
                     before =
-                        Grid.empty
-                            |> Grid.play X ( 0, 0 )
+                        TicTacToe.start
+                            |> play X ( 0, 0 )
                  in
                  before
-                    |> Grid.play O ( 0, 0 )
+                    |> play O ( 0, 0 )
                     |> Expect.equal before
                 )
             ]
         , describe "attempts to plays outside the grid are ignored"
             [ test "left"
-                (Grid.empty
-                    |> Grid.play X ( -1, 0 )
-                    |> Expect.equal Grid.empty
+                (TicTacToe.start
+                    |> play X ( -1, 0 )
+                    |> Expect.equal TicTacToe.start
                 )
             , test "right"
-                (Grid.empty
-                    |> Grid.play X ( 3, 0 )
-                    |> Expect.equal Grid.empty
+                (TicTacToe.start
+                    |> play X ( 3, 0 )
+                    |> Expect.equal TicTacToe.start
                 )
             , test "top"
-                (Grid.empty
-                    |> Grid.play X ( 0, 3 )
-                    |> Expect.equal Grid.empty
+                (TicTacToe.start
+                    |> play X ( 0, 3 )
+                    |> Expect.equal TicTacToe.start
                 )
             , test "bottom"
-                (Grid.empty
-                    |> Grid.play X ( 0, -1 )
-                    |> Expect.equal Grid.empty
+                (TicTacToe.start
+                    |> play X ( 0, -1 )
+                    |> Expect.equal TicTacToe.start
                 )
             ]
         , describe "Ending"
@@ -111,39 +119,39 @@ suite =
                     --        |        |
                     -- O(0,1) | O(1,1) |
                     -- X(0,0) | X(1,0) | X(2,0)
-                    (Grid.empty
-                        |> Grid.play X ( 0, 0 )
-                        |> Grid.play O ( 0, 1 )
-                        |> Grid.play X ( 1, 0 )
-                        |> Grid.play O ( 1, 1 )
-                        |> Grid.play X ( 2, 0 )
-                        |> decide
+                    (TicTacToe.start
+                        |> play X ( 0, 0 )
+                        |> play O ( 0, 1 )
+                        |> play X ( 1, 0 )
+                        |> play O ( 1, 1 )
+                        |> play X ( 2, 0 )
+                        |> .lastDecision
                         |> Expect.equal (Win X)
                     )
                 , test "first, right to left"
                     --        |        |
                     -- O(0,1) | O(1,1) |
                     -- X(0,0) | X(1,0) | X(2,0)
-                    (Grid.empty
-                        |> Grid.play X ( 2, 0 )
-                        |> Grid.play O ( 0, 1 )
-                        |> Grid.play X ( 1, 0 )
-                        |> Grid.play O ( 1, 1 )
-                        |> Grid.play X ( 0, 0 )
-                        |> decide
+                    (TicTacToe.start
+                        |> play X ( 2, 0 )
+                        |> play O ( 0, 1 )
+                        |> play X ( 1, 0 )
+                        |> play O ( 1, 1 )
+                        |> play X ( 0, 0 )
+                        |> .lastDecision
                         |> Expect.equal (Win X)
                     )
                 , test "second"
                     -- O(0,2) | O(1,2) |
                     -- X(0,1) | X(1,1) | X(2,1)
                     --        |        |
-                    (Grid.empty
-                        |> Grid.play X ( 2, 1 )
-                        |> Grid.play O ( 0, 2 )
-                        |> Grid.play X ( 1, 1 )
-                        |> Grid.play O ( 1, 2 )
-                        |> Grid.play X ( 0, 1 )
-                        |> decide
+                    (TicTacToe.start
+                        |> play X ( 2, 1 )
+                        |> play O ( 0, 2 )
+                        |> play X ( 1, 1 )
+                        |> play O ( 1, 2 )
+                        |> play X ( 0, 1 )
+                        |> .lastDecision
                         |> Expect.equal (Win X)
                     )
                 , test "not right away"
@@ -154,15 +162,15 @@ suite =
                     -- 0 | X | O | O
                     -----|------------
                     -- x | 0 | 1 | 2
-                    (Grid.empty
-                        |> Grid.play X ( 1, 1 )
-                        |> Grid.play O ( 2, 0 )
-                        |> Grid.play X ( 0, 1 )
-                        |> Grid.play O ( 2, 1 )
-                        |> Grid.play X ( 0, 0 )
-                        |> Grid.play O ( 1, 0 )
-                        |> Grid.play X ( 0, 2 )
-                        |> decide
+                    (TicTacToe.start
+                        |> play X ( 1, 1 )
+                        |> play O ( 2, 0 )
+                        |> play X ( 0, 1 )
+                        |> play O ( 2, 1 )
+                        |> play X ( 0, 0 )
+                        |> play O ( 1, 0 )
+                        |> play X ( 0, 2 )
+                        |> .lastDecision
                         |> Expect.equal (Win X)
                     )
                 ]
@@ -171,13 +179,13 @@ suite =
                     -- X |   |
                     -- X | O |
                     -- X | O |
-                    (Grid.empty
-                        |> Grid.play X ( 0, 0 )
-                        |> Grid.play O ( 1, 0 )
-                        |> Grid.play X ( 0, 1 )
-                        |> Grid.play O ( 1, 1 )
-                        |> Grid.play X ( 0, 2 )
-                        |> decide
+                    (TicTacToe.start
+                        |> play X ( 0, 0 )
+                        |> play O ( 1, 0 )
+                        |> play X ( 0, 1 )
+                        |> play O ( 1, 1 )
+                        |> play X ( 0, 2 )
+                        |> .lastDecision
                         |> Expect.equal (Win X)
                     )
                 ]
@@ -190,13 +198,13 @@ suite =
                     -- 0 | O | O | X
                     -----|------------
                     -- x | 0 | 1 | 2
-                    (Grid.empty
-                        |> Grid.play X ( 2, 0 )
-                        |> Grid.play O ( 0, 0 )
-                        |> Grid.play X ( 1, 1 )
-                        |> Grid.play O ( 1, 0 )
-                        |> Grid.play X ( 0, 2 )
-                        |> decide
+                    (TicTacToe.start
+                        |> play X ( 2, 0 )
+                        |> play O ( 0, 0 )
+                        |> play X ( 1, 1 )
+                        |> play O ( 1, 0 )
+                        |> play X ( 0, 2 )
+                        |> .lastDecision
                         |> Expect.equal (Win X)
                     )
                 , test "bottom right to top left"
@@ -207,13 +215,13 @@ suite =
                     -- 0 | O | O | X
                     -----|------------
                     -- x | 0 | 1 | 2
-                    (Grid.empty
-                        |> Grid.play X ( 0, 2 )
-                        |> Grid.play O ( 0, 0 )
-                        |> Grid.play X ( 1, 1 )
-                        |> Grid.play O ( 1, 0 )
-                        |> Grid.play X ( 2, 0 )
-                        |> decide
+                    (TicTacToe.start
+                        |> play X ( 0, 2 )
+                        |> play O ( 0, 0 )
+                        |> play X ( 1, 1 )
+                        |> play O ( 1, 0 )
+                        |> play X ( 2, 0 )
+                        |> .lastDecision
                         |> Expect.equal (Win X)
                     )
                 , test "bottom left to top right"
@@ -224,13 +232,13 @@ suite =
                     -- 0 | X | O | O
                     -----|------------
                     -- x | 0 | 1 | 2
-                    (Grid.empty
-                        |> Grid.play X ( 0, 0 )
-                        |> Grid.play O ( 2, 0 )
-                        |> Grid.play X ( 1, 1 )
-                        |> Grid.play O ( 1, 0 )
-                        |> Grid.play X ( 2, 2 )
-                        |> decide
+                    (TicTacToe.start
+                        |> play X ( 0, 0 )
+                        |> play O ( 2, 0 )
+                        |> play X ( 1, 1 )
+                        |> play O ( 1, 0 )
+                        |> play X ( 2, 2 )
+                        |> .lastDecision
                         |> Expect.equal (Win X)
                     )
                 , test "top right to bottom left"
@@ -241,13 +249,13 @@ suite =
                     -- 0 | X | O | O
                     -----|------------
                     -- x | 0 | 1 | 2
-                    (Grid.empty
-                        |> Grid.play X ( 2, 2 )
-                        |> Grid.play O ( 2, 0 )
-                        |> Grid.play X ( 1, 1 )
-                        |> Grid.play O ( 1, 0 )
-                        |> Grid.play X ( 0, 0 )
-                        |> decide
+                    (TicTacToe.start
+                        |> play X ( 2, 2 )
+                        |> play O ( 2, 0 )
+                        |> play X ( 1, 1 )
+                        |> play O ( 1, 0 )
+                        |> play X ( 0, 0 )
+                        |> .lastDecision
                         |> Expect.equal (Win X)
                     )
                 , test "from the middle"
@@ -258,27 +266,27 @@ suite =
                     -- 0 | X | O | O
                     -----|------------
                     -- x | 0 | 1 | 2
-                    (Grid.empty
-                        |> Grid.play X ( 1, 1 )
-                        |> Grid.play O ( 2, 0 )
-                        |> Grid.play X ( 2, 2 )
-                        |> Grid.play O ( 1, 0 )
-                        |> Grid.play X ( 0, 0 )
-                        |> decide
+                    (TicTacToe.start
+                        |> play X ( 1, 1 )
+                        |> play O ( 2, 0 )
+                        |> play X ( 2, 2 )
+                        |> play O ( 1, 0 )
+                        |> play X ( 0, 0 )
+                        |> .lastDecision
                         |> Expect.equal (Win X)
                     )
                 , test "on the last move"
-                    (Grid.empty
-                        |> Grid.play X ( 1, 1 )
-                        |> Grid.play O ( 0, 1 )
-                        |> Grid.play X ( 0, 0 )
-                        |> Grid.play O ( 2, 2 )
-                        |> Grid.play X ( 1, 2 )
-                        |> Grid.play O ( 1, 0 )
-                        |> Grid.play X ( 2, 0 )
-                        |> Grid.play O ( 2, 1 )
-                        |> Grid.play X ( 0, 2 )
-                        |> decide
+                    (TicTacToe.start
+                        |> play X ( 1, 1 )
+                        |> play O ( 0, 1 )
+                        |> play X ( 0, 0 )
+                        |> play O ( 2, 2 )
+                        |> play X ( 1, 2 )
+                        |> play O ( 1, 0 )
+                        |> play X ( 2, 0 )
+                        |> play O ( 2, 1 )
+                        |> play X ( 0, 2 )
+                        |> .lastDecision
                         |> Expect.equal (Win X)
                     )
                 ]
@@ -290,14 +298,14 @@ suite =
                 -- 0 | O | X | X
                 -----|------------
                 -- x | 0 | 1 | 2
-                (Grid.empty
-                    |> Grid.play X ( 2, 0 )
-                    |> Grid.play O ( 2, 2 )
-                    |> Grid.play X ( 1, 0 )
-                    |> Grid.play O ( 1, 1 )
-                    |> Grid.play X ( 2, 1 )
-                    |> Grid.play O ( 0, 0 )
-                    |> decide
+                (TicTacToe.start
+                    |> play X ( 2, 0 )
+                    |> play O ( 2, 2 )
+                    |> play X ( 1, 0 )
+                    |> play O ( 1, 1 )
+                    |> play X ( 2, 1 )
+                    |> play O ( 0, 0 )
+                    |> .lastDecision
                     |> Expect.equal (Win O)
                 )
             , describe "Draw when the whole grid is full"
@@ -309,17 +317,17 @@ suite =
                     -- 0 | O | X | X
                     -----|------------
                     -- x | 0 | 1 | 2
-                    (Grid.empty
-                        |> Grid.play X ( 1, 0 )
-                        |> Grid.play O ( 1, 1 )
-                        |> Grid.play X ( 2, 0 )
-                        |> Grid.play O ( 0, 0 )
-                        |> Grid.play X ( 2, 2 )
-                        |> Grid.play O ( 2, 1 )
-                        |> Grid.play X ( 0, 1 )
-                        |> Grid.play O ( 1, 2 )
-                        |> Grid.play X ( 0, 2 )
-                        |> decide
+                    (TicTacToe.start
+                        |> play X ( 1, 0 )
+                        |> play O ( 1, 1 )
+                        |> play X ( 2, 0 )
+                        |> play O ( 0, 0 )
+                        |> play X ( 2, 2 )
+                        |> play O ( 2, 1 )
+                        |> play X ( 0, 1 )
+                        |> play O ( 1, 2 )
+                        |> play X ( 0, 2 )
+                        |> .lastDecision
                         |> Expect.equal Draw
                     )
                 , test "second example"
@@ -330,17 +338,17 @@ suite =
                     -- 0 | O | X | X
                     -----|------------
                     -- x | 0 | 1 | 2
-                    (Grid.empty
-                        |> Grid.play X ( 2, 2 )
-                        |> Grid.play O ( 1, 1 )
-                        |> Grid.play X ( 2, 0 )
-                        |> Grid.play O ( 0, 0 )
-                        |> Grid.play X ( 1, 0 )
-                        |> Grid.play O ( 2, 1 )
-                        |> Grid.play X ( 0, 1 )
-                        |> Grid.play O ( 1, 2 )
-                        |> Grid.play X ( 0, 2 )
-                        |> decide
+                    (TicTacToe.start
+                        |> play X ( 2, 2 )
+                        |> play O ( 1, 1 )
+                        |> play X ( 2, 0 )
+                        |> play O ( 0, 0 )
+                        |> play X ( 1, 0 )
+                        |> play O ( 2, 1 )
+                        |> play X ( 0, 1 )
+                        |> play O ( 1, 2 )
+                        |> play X ( 0, 2 )
+                        |> .lastDecision
                         |> Expect.equal Draw
                     )
                 ]

@@ -1,18 +1,39 @@
-module Domain.TicTacToe exposing (decide)
+module Domain.TicTacToe exposing (TicTacToe, play, start)
 
 import Domain.Decision as Decision exposing (Decision(..))
-import Domain.Grid as Grid exposing (Grid)
-import Domain.Player as Player exposing (Player(..))
+import Domain.Grid as Grid exposing (Grid, Move)
+import Domain.Player as Player exposing (Player)
 import Domain.Position as Position
 import Lib.List
 
 
-decide : Grid -> Decision
+type alias TicTacToe =
+    { grid : Grid
+    , lastDecision : Decision
+    }
+
+
+start : TicTacToe
+start =
+    Grid.empty |> decide
+
+
+play : Move -> TicTacToe -> TicTacToe
+play move ticTacToe =
+    ticTacToe.grid
+        |> Grid.play2 move
+        |> decide
+
+
+decide : Grid -> TicTacToe
 decide grid =
-    Decision.start grid
-        |> Decision.try findWinner
-        |> Decision.try findDraw
-        |> Decision.withDefault nextPlayer
+    { grid = grid
+    , lastDecision =
+        Decision.start grid
+            |> Decision.try findWinner
+            |> Decision.try findDraw
+            |> Decision.withDefault nextPlayer
+    }
 
 
 findWinner : Grid -> Maybe Decision
@@ -56,7 +77,7 @@ nextPlayer grid =
     Next <|
         case grid of
             [] ->
-                X
+                Player.X
 
             { player } :: _ ->
                 Player.next player

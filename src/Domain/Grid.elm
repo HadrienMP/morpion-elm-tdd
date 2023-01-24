@@ -1,4 +1,4 @@
-module Domain.Grid exposing (Grid, Move, columns, diagonals, empty, findMoveAt, isFull, play, rows)
+module Domain.Grid exposing (Grid, Move, columns, diagonals, empty, findMoveAt, isFull, play2, rows)
 
 import Domain.Player exposing (Player)
 import Domain.Position exposing (Position)
@@ -19,21 +19,24 @@ empty =
     []
 
 
-play : Player -> ( Int, Int ) -> Grid -> Grid
-play player ( x, y ) grid =
-    if
-        hasBeenPlayed { x = x, y = y } grid
-            || isLastPlayer player grid
-            || isOutsideOfGrid x y
-    then
+play2 : Move -> Grid -> Grid
+play2 move grid =
+    if isLegal move grid then
         grid
 
     else
-        { player = player, position = { x = x, y = y } } :: grid
+        move :: grid
 
 
-isOutsideOfGrid : Int -> Int -> Bool
-isOutsideOfGrid x y =
+isLegal : Move -> Grid -> Bool
+isLegal move grid =
+    isLastPlayer move.player grid
+        || hasBeenPlayed move.position grid
+        || isOutsideOfGrid move.position
+
+
+isOutsideOfGrid : Position -> Bool
+isOutsideOfGrid { x, y } =
     x < 0 || x > 2 || y < 0 || y > 2
 
 
