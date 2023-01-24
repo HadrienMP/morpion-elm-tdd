@@ -25,11 +25,17 @@ play player ( x, y ) grid =
     if
         hasBeenPlayed { x = x, y = y } grid
             || isLastPlayer player grid
+            || isOutsideOfGrid x y
     then
         grid
 
     else
         { player = player, position = { x = x, y = y } } :: grid
+
+
+isOutsideOfGrid : Int -> Int -> Bool
+isOutsideOfGrid x y =
+    x < 0 || x > 2 || y < 0 || y > 2
 
 
 isLastPlayer : Player -> Grid -> Bool

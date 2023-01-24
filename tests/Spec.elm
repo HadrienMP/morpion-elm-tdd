@@ -83,6 +83,28 @@ suite =
                     |> Expect.equal before
                 )
             ]
+        , describe "attempts to plays outside the grid are ignored"
+            [ test "left"
+                (Grid.empty
+                    |> Grid.play X ( -1, 0 )
+                    |> Expect.equal Grid.empty
+                )
+            , test "right"
+                (Grid.empty
+                    |> Grid.play X ( 3, 0 )
+                    |> Expect.equal Grid.empty
+                )
+            , test "top"
+                (Grid.empty
+                    |> Grid.play X ( 0, 3 )
+                    |> Expect.equal Grid.empty
+                )
+            , test "bottom"
+                (Grid.empty
+                    |> Grid.play X ( 0, -1 )
+                    |> Expect.equal Grid.empty
+                )
+            ]
         , describe "Ending"
             [ describe "X wins on line"
                 [ test "first, left to right"
