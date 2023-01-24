@@ -14,6 +14,7 @@ import Routes
 import Shared
 import Types exposing (Images)
 import UI.Colors
+import UI.Font
 import UI.Space
 import Url
 
@@ -162,6 +163,7 @@ view model =
             }
             [ Background.color UI.Colors.background
             , Font.color UI.Colors.onBackground
+            , Font.size UI.Font.m
             ]
           <|
             Element.column
@@ -177,27 +179,52 @@ view model =
                     <|
                         Element.none
                 ]
-                [ navigation
+                [ navigation model.mode
                 , mainContent model
                 ]
         ]
     }
 
 
-navigation : Element.Element Msg
-navigation =
+navigation : ModeModel -> Element.Element Msg
+navigation mode =
     Element.row
         [ Element.Region.navigation, Element.padding UI.Space.m, Element.spacing UI.Space.m ]
-        [ Element.el [ Element.Region.heading 1, Font.bold ] <| Element.text "Morpion"
-        , Element.link
-            [ Font.color UI.Colors.accent
+        ((Element.el
+            [ Element.Region.heading 1
+            , Font.bold
+            , Font.size UI.Font.l
             ]
-            { url = Routes.Game |> Routes.toString, label = Element.text "Jouer" }
-        , Element.link
-            [ Font.color UI.Colors.accent
-            ]
-            { url = Routes.Presentation |> Routes.toString, label = Element.text "Présenter" }
-        ]
+          <|
+            Element.text "Morpion"
+         )
+            :: (Routes.nav
+                    |> List.map
+                        (\route ->
+                            Element.link
+                                [ Font.color UI.Colors.accent
+                                , if routeOf mode == route then
+                                    Font.bold
+
+                                  else
+                                    Font.extraLight
+                                ]
+                                { url = Routes.stringUrl route
+                                , label = Element.text <| Routes.humanName route
+                                }
+                        )
+               )
+        )
+
+
+routeOf : ModeModel -> Routes.Route
+routeOf mode =
+    case mode of
+        Game _ ->
+            Routes.Game
+
+        Presentation _ ->
+            Routes.Presentation
 
 
 mainContent : Model -> Element.Element Msg
