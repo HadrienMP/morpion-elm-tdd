@@ -2,6 +2,7 @@ module Domain.Grid exposing (Grid, Move, columns, diagonals, empty, findMoveAt, 
 
 import Domain.Player exposing (Player)
 import Domain.Position exposing (Position)
+import Html.Attributes exposing (target)
 
 
 type alias Grid =
@@ -21,7 +22,24 @@ empty =
 
 play : Player -> ( Int, Int ) -> Grid -> Grid
 play player ( x, y ) grid =
-    { player = player, position = { x = x, y = y } } :: grid
+    if
+        hasBeenPlayed { x = x, y = y } grid
+            || isLastPlayer player grid
+    then
+        grid
+
+    else
+        { player = player, position = { x = x, y = y } } :: grid
+
+
+isLastPlayer : Player -> Grid -> Bool
+isLastPlayer player grid =
+    (List.head grid |> Maybe.map .player) == Just player
+
+
+hasBeenPlayed : Position -> Grid -> Bool
+hasBeenPlayed position grid =
+    grid |> List.map .position |> List.member position
 
 
 isFull : Grid -> Bool

@@ -62,6 +62,26 @@ suite =
                     |> decide
                     |> Expect.equal (Next O)
                 )
+            , test "attempts to play when it's not your turn are ignored"
+                (let
+                    before =
+                        Grid.empty
+                            |> Grid.play X ( 0, 0 )
+                 in
+                 before
+                    |> Grid.play X ( 1, 0 )
+                    |> Expect.equal before
+                )
+            , test "attempts to override a move are ignored"
+                (let
+                    before =
+                        Grid.empty
+                            |> Grid.play X ( 0, 0 )
+                 in
+                 before
+                    |> Grid.play O ( 0, 0 )
+                    |> Expect.equal before
+                )
             ]
         , describe "Ending"
             [ describe "X wins on line"
@@ -184,7 +204,7 @@ suite =
                     -- x | 0 | 1 | 2
                     (Grid.empty
                         |> Grid.play X ( 0, 0 )
-                        |> Grid.play O ( 0, 0 )
+                        |> Grid.play O ( 2, 0 )
                         |> Grid.play X ( 1, 1 )
                         |> Grid.play O ( 1, 0 )
                         |> Grid.play X ( 2, 2 )
@@ -201,7 +221,7 @@ suite =
                     -- x | 0 | 1 | 2
                     (Grid.empty
                         |> Grid.play X ( 2, 2 )
-                        |> Grid.play O ( 0, 0 )
+                        |> Grid.play O ( 2, 0 )
                         |> Grid.play X ( 1, 1 )
                         |> Grid.play O ( 1, 0 )
                         |> Grid.play X ( 0, 0 )
@@ -218,7 +238,7 @@ suite =
                     -- x | 0 | 1 | 2
                     (Grid.empty
                         |> Grid.play X ( 1, 1 )
-                        |> Grid.play O ( 0, 0 )
+                        |> Grid.play O ( 2, 0 )
                         |> Grid.play X ( 2, 2 )
                         |> Grid.play O ( 1, 0 )
                         |> Grid.play X ( 0, 0 )
@@ -244,12 +264,12 @@ suite =
                 -- y
                 -----|------------
                 -- 2 |   |   | O
-                -- 1 |   | O |
+                -- 1 |   | O | X
                 -- 0 | O | X | X
                 -----|------------
                 -- x | 0 | 1 | 2
                 (Grid.empty
-                    |> Grid.play X ( 0, 0 )
+                    |> Grid.play X ( 2, 0 )
                     |> Grid.play O ( 2, 2 )
                     |> Grid.play X ( 1, 0 )
                     |> Grid.play O ( 1, 1 )
