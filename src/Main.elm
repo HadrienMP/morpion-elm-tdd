@@ -3,7 +3,6 @@ module Main exposing (Flags, ModeModel(..), Model, Msg(..), main)
 import Browser
 import Browser.Events
 import Browser.Navigation
-import Domain.Decision exposing (Decision(..))
 import Element
 import Element.Background as Background
 import Element.Font as Font

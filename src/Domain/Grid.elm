@@ -2,7 +2,6 @@ module Domain.Grid exposing (Grid, Move, columns, diagonals, empty, findMoveAt, 
 
 import Domain.Player exposing (Player)
 import Domain.Position exposing (Position)
-import Html.Attributes exposing (target)
 
 
 type alias Grid =

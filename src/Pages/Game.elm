@@ -5,14 +5,13 @@ import Domain.Grid as Grid
 import Domain.Player as Player
 import Domain.Position as Position
 import Domain.TicTacToe
-import Element exposing (Element, centerY)
-import Element.Background
+import Element
+import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
 import Element.Input as Input
-import Element.Region exposing (description)
 import Html.Attributes
-import Json.Encode
+import Json.Encode as Json
 import Types exposing (Size)
 import UI.Colors
 import UI.Space
@@ -65,7 +64,7 @@ update msg model =
 -- View
 
 
-view : Types.Images -> Size -> Model -> Element Msg
+view : Types.Images -> Size -> Model -> Element.Element Msg
 view images availableSize model =
     Element.el
         [ Element.inFront <|
@@ -77,7 +76,7 @@ view images availableSize model =
                     Element.el
                         [ Element.width Element.fill
                         , Element.height Element.fill
-                        , Element.Background.color <| UI.Colors.withAlpha 0.6 UI.Colors.background
+                        , Background.color <| UI.Colors.withAlpha 0.6 UI.Colors.background
                         ]
                     <|
                         Element.column
@@ -89,7 +88,7 @@ view images availableSize model =
                             ]
                             [ displayDecision availableSize model
                             , Input.button
-                                [ Element.Background.color UI.Colors.accent
+                                [ Background.color UI.Colors.accent
                                 , Font.color UI.Colors.onAccent
                                 , Element.padding UI.Space.m
                                 , Element.centerX
@@ -130,7 +129,7 @@ view images availableSize model =
             ]
 
 
-displayDecision : Size -> Model -> Element Msg
+displayDecision : Size -> Model -> Element.Element Msg
 displayDecision availableSize model =
     case model.lastDecision of
         Domain.Decision.Next _ ->
@@ -153,7 +152,7 @@ minDimension size =
     min size.width size.height
 
 
-displayGrid : Types.Images -> Size -> Model -> Element Msg
+displayGrid : Types.Images -> Size -> Model -> Element.Element Msg
 displayGrid images availableSize model =
     Element.column
         [ Element.centerX
@@ -174,7 +173,7 @@ displayGrid images availableSize model =
         )
 
 
-displayField : Size -> Position.Position -> Model -> Types.Images -> Element Msg
+displayField : Size -> Position.Position -> Model -> Types.Images -> Element.Element Msg
 displayField availableSize position model images =
     let
         cellSize =
@@ -220,7 +219,7 @@ displayField availableSize position model images =
         , Border.color <| UI.Colors.darken 10 UI.Colors.accent
         , Element.htmlAttribute <|
             Html.Attributes.property "style" <|
-                Json.Encode.string <|
+                Json.string <|
                     case model.lastDecision of
                         Domain.Decision.Next player ->
                             "cursor: url('"
@@ -239,7 +238,7 @@ displayField availableSize position model images =
                     Element.image
                         [ Element.width <| Element.px <| cellSize * 3 // 5
                         , Element.centerX
-                        , centerY
+                        , Element.centerY
                         ]
                     <|
                         .image <|
