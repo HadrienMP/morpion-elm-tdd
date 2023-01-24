@@ -23,10 +23,10 @@ humanName : Route -> String
 humanName route =
     case route of
         Game ->
-            "Jouer"
+            "Jeu"
 
         Presentation ->
-            "Présenter"
+            "Présentation"
 
 
 nav : List Route

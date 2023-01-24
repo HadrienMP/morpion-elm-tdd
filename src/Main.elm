@@ -179,31 +179,29 @@ view model =
                     <|
                         Element.none
                 ]
-                [ navigation model.mode
+                [ navigation model
                 , mainContent model
                 ]
         ]
     }
 
 
-navigation : ModeModel -> Element.Element Msg
-navigation mode =
+navigation : Model -> Element.Element Msg
+navigation model =
     Element.row
         [ Element.Region.navigation, Element.padding UI.Space.m, Element.spacing UI.Space.m ]
-        ((Element.el
-            [ Element.Region.heading 1
-            , Font.bold
-            , Font.size UI.Font.l
+        ((Element.image
+            [ Element.width <| Element.px 50
             ]
           <|
-            Element.text "Morpion"
+            { src = model.images.tictactoe, description = "une grille de morpion" }
          )
             :: (Routes.nav
                     |> List.map
                         (\route ->
                             Element.link
                                 [ Font.color UI.Colors.accent
-                                , if routeOf mode == route then
+                                , if routeOf model.mode == route then
                                     Font.bold
 
                                   else
