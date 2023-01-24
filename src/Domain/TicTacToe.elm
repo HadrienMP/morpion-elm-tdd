@@ -20,9 +20,14 @@ start =
 
 play : Move -> TicTacToe -> TicTacToe
 play move ticTacToe =
-    ticTacToe.grid
-        |> Grid.play2 move
-        |> decide
+    case ticTacToe.lastDecision of
+        Decision.Next _ ->
+            ticTacToe.grid
+                |> Grid.play2 move
+                |> decide
+
+        _ ->
+            ticTacToe
 
 
 decide : Grid -> TicTacToe

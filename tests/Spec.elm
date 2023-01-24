@@ -113,6 +113,23 @@ suite =
                     |> Expect.equal TicTacToe.start
                 )
             ]
+        , test "Plays after the end of a grid are ignored"
+            --        |        |
+            -- O(0,1) | O(1,1) |
+            -- X(0,0) | X(1,0) | X(2,0)
+            (let
+                before =
+                    TicTacToe.start
+                        |> play X ( 0, 0 )
+                        |> play O ( 0, 1 )
+                        |> play X ( 1, 0 )
+                        |> play O ( 1, 1 )
+                        |> play X ( 2, 0 )
+             in
+             before
+                |> play O ( 2, 2 )
+                |> Expect.equal before
+            )
         , describe "Ending"
             [ describe "X wins on line"
                 [ test "first, left to right"
