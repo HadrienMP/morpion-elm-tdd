@@ -41,19 +41,14 @@ type Msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case ( msg, model.lastDecision ) of
-        ( PlayAt position, Domain.Decision.Next player ) ->
-            ( Domain.TicTacToe.play
-                { player = player, position = position }
-                model
+    case msg of
+        PlayAt position ->
+            ( Domain.TicTacToe.playAt position model
             , Cmd.none
             )
 
-        ( Restart, _ ) ->
+        Restart ->
             ( init, Cmd.none )
-
-        _ ->
-            ( model, Cmd.none )
 
 
 

@@ -1,4 +1,4 @@
-module Domain.TicTacToe exposing (TicTacToe, play, start)
+module Domain.TicTacToe exposing (TicTacToe, play, playAt, start)
 
 import Domain.Decision as Decision exposing (Decision(..))
 import Domain.Grid as Grid exposing (Grid, Move)
@@ -16,6 +16,18 @@ type alias TicTacToe =
 start : TicTacToe
 start =
     Grid.empty |> decide
+
+
+playAt : Position.Position -> TicTacToe -> TicTacToe
+playAt position ticTacToe =
+    case ticTacToe.lastDecision of
+        Decision.Next player ->
+            ticTacToe.grid
+                |> Grid.play2 { player = player, position = position }
+                |> decide
+
+        _ ->
+            ticTacToe
 
 
 play : Move -> TicTacToe -> TicTacToe
