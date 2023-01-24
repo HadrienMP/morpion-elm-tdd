@@ -1,4 +1,4 @@
-module Pages.Presentation.Slide5 exposing (view)
+module Pages.Presentation.S5_Disclaimer exposing (view)
 
 import Element
 import Element.Font as Font
@@ -16,7 +16,7 @@ view =
                 [ Element.el [ Element.alignTop ] <|
                     Element.image [ Element.width <| Element.px 140 ]
                         { src = images.disclaimer
-                        , description = "Une porte en métal avec trois panneaux d'avertissement: explosif, inflammable, interdit"
+                        , description = "Un panneau attention aux tracteurs"
                         }
                 , Element.column [ Element.spacing Space.m ]
                     [ Text.l2 [ Font.bold ] "Disclaimer"

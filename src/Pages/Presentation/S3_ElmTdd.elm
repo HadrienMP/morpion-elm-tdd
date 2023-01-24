@@ -1,4 +1,4 @@
-module Pages.Presentation.Slide3 exposing (view)
+module Pages.Presentation.S3_ElmTdd exposing (view)
 
 import Element
 import Element.Font as Font

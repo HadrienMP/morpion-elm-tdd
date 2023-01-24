@@ -1,4 +1,4 @@
-module Pages.Presentation.Slide1 exposing (view)
+module Pages.Presentation.S1_Title exposing (view)
 
 import Element
 import Element.Border as Border

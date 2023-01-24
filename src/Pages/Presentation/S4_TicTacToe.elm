@@ -1,4 +1,4 @@
-module Pages.Presentation.Slide4 exposing (view)
+module Pages.Presentation.S4_TicTacToe exposing (view)
 
 import Element
 import Element.Font as Font

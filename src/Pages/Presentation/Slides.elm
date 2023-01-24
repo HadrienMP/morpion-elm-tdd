@@ -1,11 +1,11 @@
 module Pages.Presentation.Slides exposing (init)
 
 import Lib.Slides
-import Pages.Presentation.Slide1
-import Pages.Presentation.Slide2
-import Pages.Presentation.Slide3
-import Pages.Presentation.Slide4
-import Pages.Presentation.Slide5
+import Pages.Presentation.S1_Title
+import Pages.Presentation.S2_Presentation
+import Pages.Presentation.S3_ElmTdd
+import Pages.Presentation.S4_TicTacToe
+import Pages.Presentation.S5_Disclaimer
 import Pages.Presentation.Types
 import Types
 import UI.Colors
@@ -26,9 +26,9 @@ init url =
 
 slides : List (Pages.Presentation.Types.Slide msg)
 slides =
-    [ Pages.Presentation.Slide1.view
-    , Pages.Presentation.Slide2.view
-    , Pages.Presentation.Slide3.view
-    , Pages.Presentation.Slide4.view
-    , Pages.Presentation.Slide5.view
+    [ Pages.Presentation.S1_Title.view
+    , Pages.Presentation.S2_Presentation.view
+    , Pages.Presentation.S3_ElmTdd.view
+    , Pages.Presentation.S4_TicTacToe.view
+    , Pages.Presentation.S5_Disclaimer.view
     ]

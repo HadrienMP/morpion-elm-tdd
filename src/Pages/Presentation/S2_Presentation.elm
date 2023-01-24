@@ -1,4 +1,4 @@
-module Pages.Presentation.Slide2 exposing (view)
+module Pages.Presentation.S2_Presentation exposing (view)
 
 import Element
 import Element.Border as Border
