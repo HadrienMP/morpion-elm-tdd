@@ -10,7 +10,9 @@ type alias Images =
     , tdd : String
     , disclaimer : String
     , finn : String
+    , finnCursor : String
     , jake : String
+    , jakeCursor : String
     }
 
 

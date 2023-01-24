@@ -10,6 +10,9 @@ import Element.Background
 import Element.Border as Border
 import Element.Font as Font
 import Element.Input as Input
+import Element.Region exposing (description)
+import Html.Attributes
+import Json.Encode
 import Types exposing (Size)
 import UI.Colors
 import UI.Space
@@ -99,7 +102,32 @@ view images availableSize model =
         , Element.height Element.fill
         ]
     <|
-        displayGrid images availableSize model
+        Element.column
+            [ Element.centerX
+            , Element.centerY
+            , Element.spacing UI.Space.m
+            ]
+            [ case model.lastDecision of
+                Domain.Decision.Next player ->
+                    Element.row
+                        [ Font.size <| minDimension availableSize // 10
+                        , Element.centerX
+                        ]
+                        [ playerProperties player images
+                            |> .image
+                            |> Element.image
+                                [ Element.width <|
+                                    Element.px <|
+                                        minDimension availableSize
+                                            // 10
+                                ]
+                        , Element.el [ Element.moveDown 2 ] <| Element.text " is next"
+                        ]
+
+                _ ->
+                    Element.none
+            , displayGrid images availableSize model
+            ]
 
 
 displayDecision : Size -> Model -> Element Msg
@@ -190,6 +218,17 @@ displayField availableSize position model images =
         , Element.height <| Element.px <| cellSize
         , Border.widthEach sides
         , Border.color <| UI.Colors.darken 10 UI.Colors.accent
+        , Element.htmlAttribute <|
+            Html.Attributes.property "style" <|
+                Json.Encode.string <|
+                    case model.lastDecision of
+                        Domain.Decision.Next player ->
+                            "cursor: url('"
+                                ++ (playerProperties player images |> .cursor)
+                                ++ "'), auto"
+
+                        _ ->
+                            "cursor: pointer"
         ]
         { onPress = Just <| PlayAt position
         , label =
@@ -203,17 +242,33 @@ displayField availableSize position model images =
                         , centerY
                         ]
                     <|
-                        case player of
-                            Player.X ->
-                                { src = images.finn
-                                , description = "Finn from adventure time"
-                                }
-
-                            Player.O ->
-                                { src = images.jake
-                                , description = "Jake from adventure time"
-                                }
+                        .image <|
+                            playerProperties player images
 
                 Nothing ->
                     Element.none
         }
+
+
+type alias PlayerProperties =
+    { image : { src : String, description : String }, cursor : String }
+
+
+playerProperties : Player.Player -> Types.Images -> PlayerProperties
+playerProperties player images =
+    case player of
+        Player.X ->
+            { image =
+                { src = images.finn
+                , description = "Finn"
+                }
+            , cursor = images.finnCursor
+            }
+
+        Player.O ->
+            { image =
+                { src = images.jake
+                , description = "Jake"
+                }
+            , cursor = images.jakeCursor
+            }
