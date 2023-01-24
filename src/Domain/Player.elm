@@ -38,7 +38,7 @@ toString : Player -> String
 toString player =
     case player of
         X ->
-            "X"
+            "Finn"
 
         O ->
-            "O"
+            "Jake"

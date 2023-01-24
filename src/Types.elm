@@ -9,6 +9,8 @@ type alias Images =
     , tictactoe : String
     , tdd : String
     , disclaimer : String
+    , finn : String
+    , jake : String
     }
 
 

@@ -23,7 +23,7 @@ import Url.Builder
 type alias Model context =
     { currentSlide : Int
     , slides : List (Slide context Msg)
-    , background : Background context
+    , background : Maybe (Background context)
     , accent : Element.Color
     }
 
@@ -50,7 +50,7 @@ init slides url =
             |> Maybe.withDefault 1
             |> andSubtract 1
     , slides = slides
-    , background = Color { r = 0, b = 0, g = 0, a = 0 }
+    , background = Just <| Color { r = 0, b = 0, g = 0, a = 0 }
     , accent = Element.rgb255 0 112 255
     }
 
@@ -161,7 +161,10 @@ view size context model =
         }
         [ Font.color <| Element.rgb 1 1 1
         , Element.clip
-        , Element.behindContent <| displayBackground context model.background
+        , model.background
+            |> Maybe.map (displayBackground context)
+            |> Maybe.withDefault Element.none
+            |> Element.behindContent
         , Element.inFront <|
             Element.column
                 [ Element.alignBottom

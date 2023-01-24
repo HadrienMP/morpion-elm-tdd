@@ -168,6 +168,15 @@ view model =
             Element.column
                 [ Element.height Element.fill
                 , Element.width Element.fill
+                , Element.behindContent <|
+                    Element.el
+                        [ Background.image model.images.adventureTime
+                        , Element.width Element.fill
+                        , Element.height Element.fill
+                        , Element.alpha 0.3
+                        ]
+                    <|
+                        Element.none
                 ]
                 [ navigation
                 , mainContent model
@@ -212,6 +221,7 @@ mainContent model =
 
             Game game ->
                 Pages.Game.view
+                    model.images
                     { width = model.windowSize.width
                     , height = model.windowSize.height - 100
                     }

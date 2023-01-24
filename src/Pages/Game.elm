@@ -5,7 +5,7 @@ import Domain.Grid as Grid
 import Domain.Player as Player
 import Domain.Position as Position
 import Domain.TicTacToe
-import Element exposing (Element, htmlAttribute)
+import Element exposing (Element, centerY, htmlAttribute)
 import Element.Border as Border
 import Element.Font as Font
 import Element.Input as Input
@@ -57,15 +57,15 @@ update msg model =
 -- View
 
 
-view : Size -> Model -> Element Msg
-view availableSize model =
+view : Types.Images -> Size -> Model -> Element Msg
+view images availableSize model =
     Element.column
         [ Element.centerX
         , Element.centerY
         , Element.spacing UI.Space.m
         ]
         [ displayDecision availableSize model
-        , displayGrid availableSize model
+        , displayGrid images availableSize model
         ]
 
 
@@ -89,8 +89,8 @@ minDimension size =
     min size.width size.height
 
 
-displayGrid : Size -> Model -> Element Msg
-displayGrid availableSize model =
+displayGrid : Types.Images -> Size -> Model -> Element Msg
+displayGrid images availableSize model =
     let
         cellSize =
             minDimension availableSize // 5
@@ -118,15 +118,22 @@ displayGrid availableSize model =
                                                 Grid.findMoveAt position model.grid
                                             of
                                                 Just { player } ->
-                                                    Element.el
-                                                        [ Font.size <| cellSize - 10
+                                                    Element.image
+                                                        [ Element.width <| Element.px <| cellSize * 3 // 4
                                                         , Element.centerX
-                                                        , Element.centerY
-                                                        , htmlAttribute <| Html.Attributes.style "transform" "translateY(10%)"
+                                                        , centerY
                                                         ]
                                                     <|
-                                                        Element.text <|
-                                                            Player.toString player
+                                                        case player of
+                                                            Player.X ->
+                                                                { src = images.finn
+                                                                , description = "Finn from adventure time"
+                                                                }
+
+                                                            Player.O ->
+                                                                { src = images.jake
+                                                                , description = "Jake from adventure time"
+                                                                }
 
                                                 Nothing ->
                                                     Element.none

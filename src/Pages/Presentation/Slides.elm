@@ -19,7 +19,7 @@ init url =
             Lib.Slides.init slides url
     in
     { model
-        | background = Lib.Slides.Image { url = .adventureTime, opacity = 0.3 }
+        | background = Nothing
         , accent = UI.Colors.accent
     }
 
