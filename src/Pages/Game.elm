@@ -150,7 +150,10 @@ displayField : Size -> Position.Position -> Model -> Types.Images -> Element Msg
 displayField availableSize position model images =
     let
         cellSize =
-            minDimension availableSize // 5
+            minDimension availableSize
+                // 5
+                |> max 100
+                |> min 200
 
         borderWidth =
             max 1 <| cellSize // 90

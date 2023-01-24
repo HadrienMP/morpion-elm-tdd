@@ -19,6 +19,7 @@
     "elm-review": "^2.9.1",
     "elm-test-rs": "^3.0.0-3",
     "elm-tooling": "^1.10.0",
-    "parcel": "^2.8.0"
+    "parcel": "^2.8.0",
+    "sharp": "^0.31.3"
   }
 }
