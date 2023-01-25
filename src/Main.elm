@@ -200,13 +200,12 @@ navigation model =
                     |> List.map
                         (\route ->
                             Element.link
-                                [ Font.color UI.Colors.accent
-                                , if routeOf model.mode == route then
-                                    Font.bold
+                                (if routeOf model.mode == route then
+                                    [ Font.color UI.Colors.accent, Font.bold ]
 
-                                  else
-                                    Font.extraLight
-                                ]
+                                 else
+                                    [ Font.extraLight ]
+                                )
                                 { url = Routes.stringUrl route
                                 , label = Element.text <| Routes.humanName route
                                 }
