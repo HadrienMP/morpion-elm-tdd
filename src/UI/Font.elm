@@ -1,4 +1,4 @@
-module UI.Font exposing (..)
+module UI.Font exposing (m)
 
 import Element
 
@@ -11,8 +11,3 @@ scaled =
 m : Int
 m =
     scaled 2
-
-
-l : Int
-l =
-    scaled 3
