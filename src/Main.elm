@@ -189,7 +189,12 @@ view model =
 navigation : Model -> Element.Element Msg
 navigation model =
     Element.row
-        [ Element.Region.navigation, Element.padding UI.Space.m, Element.spacing UI.Space.m ]
+        [ Element.Region.navigation
+        , Element.padding UI.Space.m
+        , Element.spacing UI.Space.m
+        , Element.width Element.fill
+        , Background.color <| UI.Colors.withAlpha 0.6 <| UI.Colors.background
+        ]
         ((Element.image
             [ Element.width <| Element.px 50
             ]
