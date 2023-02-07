@@ -44,7 +44,11 @@ view =
                             , "Technique de design"
                             , "Cycle :"
                             ]
-                        , UI.ol [ Element.moveRight <| toFloat Space.l ] [ "1 test simple", "correction évidente/anarque", "refactor" ]
+                        , UI.ol [ Element.moveRight <| toFloat Space.l ]
+                            [ "1 test simple"
+                            , "correction évidente/arnaque"
+                            , "refactor"
+                            ]
                         ]
                     ]
                 ]

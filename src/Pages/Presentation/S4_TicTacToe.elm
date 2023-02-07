@@ -27,7 +27,7 @@ view =
                             , "Grille de 3x3"
                             , "X joue en premier"
                             , "Les joueurs jouent tour à tour"
-                            , "On ne pas rejouer sur une case"
+                            , "On ne peut pas rejouer sur une case"
                             ]
                         ]
                     , Element.column []
