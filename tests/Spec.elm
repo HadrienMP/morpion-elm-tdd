@@ -28,7 +28,99 @@ import Test exposing (Test, describe)
 
 suite : Test
 suite =
-    describe "Coucou change moi"
-        [ test "Et moi !"
-            (Expect.equal "oui" "oui")
+    describe "Tic Tac Toe"
+        [ test "X plays first"
+            -- Expect.equal (Next X) (decide empty)
+            -- (decide empty |> Expect.equal (Next X))
+            (emptyGrid
+                |> decide
+                |> Expect.equal (Next X)
+            )
+        , test "O plays second"
+            (emptyGrid
+                |> play X ( 1, 1 )
+                |> decide
+                |> Expect.equal (Next O)
+            )
+        , test "players take turns"
+            (emptyGrid
+                |> play X ( 1, 1 )
+                |> play O ( 0, 1 )
+                |> decide
+                |> Expect.equal (Next X)
+            )
+        , test "francois"
+            --   |   |
+            -- O | O |
+            -- X | X | X
+            (emptyGrid
+                |> play X ( 0, 0 )
+                |> play O ( 1, 0 )
+                |> play X ( 0, 1 )
+                |> play O ( 1, 1 )
+                |> play X ( 0, 2 )
+                |> decide
+                |> Expect.equal (Wins X)
+            )
         ]
+
+
+type alias Grid =
+    List Move
+
+
+emptyGrid : Grid
+emptyGrid =
+    []
+
+
+
+-- Mieux que les enum -> Les union types
+
+
+type Player
+    = X
+    | O
+
+
+type Decision
+    = Next Player
+    | Wins Player
+
+
+
+-- function ticTacToe(grid: string): Jojo
+
+
+type alias Move =
+    { player : Player
+    , position : ( Int, Int )
+    }
+
+
+play : Player -> ( Int, Int ) -> Grid -> Grid
+play player position grid =
+    { player = player, position = position } :: grid
+
+
+decide : Grid -> Decision
+decide grid =
+    case grid of
+        { player, position } :: _ ->
+            if position == ( 0, 2 ) then
+                Wins X
+
+            else
+                switch player
+
+        [] ->
+            Next X
+
+
+switch : Player -> Decision
+switch player =
+    if player == X then
+        Next O
+
+    else
+        Next X
