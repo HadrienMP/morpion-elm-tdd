@@ -23,7 +23,7 @@ playAt position ticTacToe =
     case ticTacToe.lastDecision of
         Decision.Next player ->
             ticTacToe.grid
-                |> Grid.play2 { player = player, position = position }
+                |> Grid.add { player = player, position = position }
                 |> decide
 
         _ ->
@@ -35,7 +35,7 @@ play move ticTacToe =
     case ticTacToe.lastDecision of
         Decision.Next _ ->
             ticTacToe.grid
-                |> Grid.play2 move
+                |> Grid.add move
                 |> decide
 
         _ ->
