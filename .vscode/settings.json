@@ -5,9 +5,5 @@
     "liveshare.allowGuestTaskControl": true,
     "liveshare.alwaysFollowHost": false,
     "liveshare.anonymousGuestApproval": "accept",
-    "liveshare.languages.allowGuestCommandControl": true,
-    "elmLS.elmFormatPath": "elm-format",
-    "elmLS.elmPath": "elm",
-    "elmLS.elmReviewPath": "elm-review",
-    "elmLS.elmTestPath": "elm-test",
+    "liveshare.languages.allowGuestCommandControl": true
 }
